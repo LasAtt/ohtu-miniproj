@@ -9,6 +9,6 @@ package com.unknownpotato.ohtu.miniproj.io;
  *
  * @author axwikstr
  */
-public class Bibtex {
+public class BibtexFormater {
     
 }
