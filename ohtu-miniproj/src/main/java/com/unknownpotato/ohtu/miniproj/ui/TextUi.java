@@ -20,15 +20,15 @@ public class TextUi {
         int choice = 0;
         while (true) {
              System.out.println("Type 1 to add a new book type reference, 2 to list all book type references, 3 to export to BibTex or 4 to quit");
-             choice = Integer.parseInt(reader.next());
+             choice = Integer.parseInt(reader.nextLine());
              if (choice == 1) {
-                 System.out.print("Author: ");
+                 System.out.println("Author: ");
                  String author = reader.nextLine();
-                 System.out.print("Title: ");
+                 System.out.println("Title: ");
                  String title = reader.nextLine();
-                 System.out.print("Publisher: ");
+                 System.out.println("Publisher: ");
                  String publisher = reader.nextLine();
-                 System.out.print("Year: ");
+                 System.out.println("Year: ");
                  String year = reader.nextLine();
                  ReferenceFactory.createBookReference(author, title, publisher, year);
                  continue;
