@@ -9,7 +9,7 @@ import com.unknownpotato.ohtu.miniproj.domain.Reference;
 
 /**
  *
- * @author axwikstr
+ * @author axwikstr, VoxWave
  */
 public class BibtexFormatter {
     public static String convertReference(Reference ref){

@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
+import com.unknownpotato.ohtu.miniproj.domain.ReferenceFactory;
 
 public class BibtexFormatterTest {
 	
@@ -13,7 +14,7 @@ public class BibtexFormatterTest {
 	
 	@Before
 	public void setUp(){
-		
+		ref = ReferenceFactory.createBookReference("Victor Bankowski", "a Dive into the Rust Programming Language", "Unknownpotato publishing", "2051");
 	}
 	
 	@Test
