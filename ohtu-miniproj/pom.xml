@@ -16,12 +16,11 @@
     <dependencies>
         
         <!-- testing -->
-        
         <dependency>
             <groupId>org.easyb</groupId>
             <artifactId>easyb-core</artifactId>
             <version>${easyb.version}</version>
-            <scope>test</scope>        
+            <scope>test</scope>
         </dependency>
         
         <dependency>
@@ -36,9 +35,34 @@
             <artifactId>hamcrest-all</artifactId>
             <version>1.1</version>
             <scope>test</scope>
-        </dependency>  
-    </dependencies>
+        </dependency>
 
+        <!-- spring -->
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -61,7 +85,7 @@
                     </formats>
                 </configuration>
             </plugin>
-                                  
+
             <plugin>
                 <groupId>org.easyb</groupId>
                 <artifactId>maven-easyb-plugin</artifactId>
@@ -82,5 +106,4 @@
             </plugin>
         </plugins>
     </build>
-    
 </project>
