@@ -1,3 +1,5 @@
+import com.unknownpotato.com.ohtu.miniproj.*
+
 description 'User can add a new reference to the program'
 
 scenario "user can add a correctly formatted book type reference", {
