@@ -1,12 +1,4 @@
-import ohtu.*
-import ohtu.services.*
-import ohtu.data_access.*
-import ohtu.domain.*
-import ohtu.io.*
-
-description """A new user account can be created 
-              if a proper unused username 
-              and a proper password are given"""
+description 'User can list the references stored in the program'
 
 scenario "creation successful with correct username and password", {
     given 'command new user is selected', {

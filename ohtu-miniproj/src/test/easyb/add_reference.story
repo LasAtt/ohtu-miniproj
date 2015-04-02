@@ -1,10 +1,4 @@
-import ohtu.*
-import ohtu.services.*
-import ohtu.data_access.*
-import ohtu.domain.*
-import ohtu.io.*
-
-description 'User can log in with valid username/password-combination'
+description 'User can add a new reference to the program'
 
 scenario "user can login with correct password", {
     given 'command login selected', {
