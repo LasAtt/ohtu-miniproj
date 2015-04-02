@@ -1,0 +1,9 @@
+Definition of Done
+
+- Toteutus vastaa User story:ssa määriteltyä toiminnallisuutta
+- Toteutetulla koodilla on kattavat yksikkötestit sekä easyB-testit
+- Asiakas pääsee näkemään koko ajan koodin ja testien tilanteen CI-palvelimelta (Jenkins)
+- Asiakkaalla on koko ajan pääsy sovelluksen viimeisimpään lähdekoodiin (https://github.com/serdion/ohtu-miniproj)
+- Sovelluskoodissa noudatetaan clean code -periaatteita
+- Järkevästi nimetyt muuttujat, metodit ja luokat
+- Järkevä ja selkeä sovellusarkkitehtuuri
