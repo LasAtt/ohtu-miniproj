@@ -3,3 +3,4 @@
 
 - Backlog: https://waffle.io/serdion/ohtu-miniproj
 - Definition of Done: https://github.com/serdion/ohtu-miniproj/blob/master/Definition_of_Done
+- CI-palvelin (Jenkins): http://ohtu.jamo.io/job/ohtu-miniproj/
