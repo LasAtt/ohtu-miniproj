@@ -1,52 +1,16 @@
 description 'User can add a new reference to the program'
 
-scenario "user can login with correct password", {
-    given 'command login selected', {
-       userDao = new InMemoryUserDao()
-       auth = new AuthenticationService(userDao)
-       io = new StubIO("login", "pekka", "akkep") 
-       app = new App(io, auth)
+scenario "user can add a correctly formatted book type reference", {
+    given 'reference add attempt', {
+       references = new References()
+       references.addReference("test", "test", "test");
     }
 
-    when 'a valid username and a password are entered', {
-       app.run()
+    when 'valid reference information is entered', {
+       addedReference = references.getReference("test").getName()
     }
 
-    then 'user will be logged in to system' {
-       io.getPrints().shouldHave("logged in")
-    }
-}
-
-scenario "user can not login with incorrect password", {
-    given 'command login selected' {
-       userDao = new InMemoryUserDao()
-       auth = new AuthenticationService(userDao)
-       io = new StubIO("login", "pekka", "saffdaaf") 
-       app = new App(io, auth)
-    }
-
-    when 'a valid username and an incorrect password are entered' {
-       app.run()
-    }
-
-    then 'user will not be logged in to system' {
-       io.getPrints().shouldHave("wrong username or password")
-    }
-}
-
-scenario "nonexistent user can not login to ", {
-    given 'command login selected', {
-       userDao = new InMemoryUserDao()
-       auth = new AuthenticationService(userDao)
-       io = new StubIO("login", "ssddsdsd", "akkep") 
-       app = new App(io, auth)
-    }
-
-    when 'an incorrect username is entered', {
-       app.run()
-    }
-
-    then 'user will not be logged in to system' {
-       io.getPrints().shouldHave("wrong username or password")
+    then 'new reference has been added' {
+       addedReference.shouldHave("test")
     }
 }
