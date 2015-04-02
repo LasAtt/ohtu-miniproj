@@ -15,6 +15,7 @@ public class ReferenceFactory {
         ref.addField("author", author);
         ref.addField("title", title);
         ref.addField("year", year);
+        ref.addField("publisher", publisher);
         String[] optionalFields = { "volume", "number", "series", "address", "edition", "month", "note" };
         for (String optionalField : optionalFields) {
             ref.addField(optionalField, "");
