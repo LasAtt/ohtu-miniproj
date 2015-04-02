@@ -1,4 +1,4 @@
-import com.unknownpotato.com.ohtu.miniproj.*
+/**import com.unknownpotato.com.ohtu.miniproj.*
 
 description 'User can list the references stored in the program'
 
@@ -18,4 +18,4 @@ scenario "user can list all added book type references", {
        addedReferences.shouldHave("test")
        addedReferences.shouldHave("test2")
     }
-}
+}*/

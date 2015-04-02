@@ -26,7 +26,7 @@ public class Reference {
         return fields.get(key);
     }
 
-    public Set<String> getField() {
+    public Set<String> getFieldKeys() {
         return fields.keySet();
     }
 
