@@ -5,12 +5,15 @@
  */
 package com.unknownpotato.ohtu.miniproj;
 
+import com.unknownpotato.ohtu.miniproj.ui.TextUi;
+
 /**
  *
  * @author axwikstr
  */
 public class App {
     public static void main(String[] args) {
-        
+        TextUi textUi = new TextUi();
+        textUi.run();
     }
 }
