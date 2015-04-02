@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.unknownpotato.ohtu.miniproj.domain;
 
 import java.util.HashMap;
@@ -10,9 +5,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
- * @author axwikstr
+ * Reference class that includes the type of reference and all necessary fields.
  */
+
 public class Reference {
 
     private Map<String, String> fields;
@@ -35,6 +30,12 @@ public class Reference {
         return fields.keySet();
     }
 
+    /**
+     * Checks if map contains the field to edit and puts the new value if field is found,
+     * else throws error.
+     * @param key
+     * @param value 
+     */
     public void editField(String key, String value) {
         if (!fields.containsKey(key)) {
             throw new NoSuchFieldError("Reference" + type + " does not have field " + key);

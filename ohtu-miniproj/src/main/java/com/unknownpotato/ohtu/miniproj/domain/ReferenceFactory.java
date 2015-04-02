@@ -6,10 +6,18 @@
 package com.unknownpotato.ohtu.miniproj.domain;
 
 /**
- *
- * @author axwikstr
+ * Provides methods for creating reference-classes with varying parameters.
  */
 public class ReferenceFactory {
+    
+    /**
+     * Creates and returns a book reference with required fields. Reference has empty fields for optional fields.
+     * @param author
+     * @param title
+     * @param publisher
+     * @param year
+     * @return 
+     */
     public static Reference createBookReference(String author, String title, String publisher, String year){
         Reference ref = new Reference(ReferenceType.BOOK);
         ref.addField("author", author);
