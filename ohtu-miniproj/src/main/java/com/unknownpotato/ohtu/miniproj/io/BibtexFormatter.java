@@ -5,10 +5,14 @@
  */
 package com.unknownpotato.ohtu.miniproj.io;
 
+import com.unknownpotato.ohtu.miniproj.domain.Reference;
+
 /**
  *
  * @author axwikstr
  */
 public class BibtexFormatter {
-    
+    public static String convertReference(Reference ref){
+		return null;    	
+    }
 }
