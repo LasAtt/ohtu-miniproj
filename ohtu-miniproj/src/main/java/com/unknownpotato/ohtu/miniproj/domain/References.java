@@ -5,10 +5,25 @@
  */
 package com.unknownpotato.ohtu.miniproj.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author axwikstr
  */
 public class References {
+    private List<Reference> refs;
     
+    public References() {
+        refs = new ArrayList();
+    }
+    
+    public void addReference(Reference r) {
+        refs.add(r);
+    };
+    
+    public List<Reference> getReferences() {
+        return refs;
+    }
 }
