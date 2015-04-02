@@ -10,6 +10,12 @@ package com.unknownpotato.ohtu.miniproj.domain;
  */
 public class ReferenceFactory {
     
+    private static References references;
+    
+      public ReferenceFactory(References references) {
+        this.references = references;
+    }
+    
     /**
      * Creates and returns a book reference with required fields. Reference has empty fields for optional fields.
      * @param author
@@ -28,6 +34,7 @@ public class ReferenceFactory {
         for (String optionalField : optionalFields) {
             ref.addField(optionalField, "");
         }
+        references.addReference(ref);
         return ref;
     }
 }
