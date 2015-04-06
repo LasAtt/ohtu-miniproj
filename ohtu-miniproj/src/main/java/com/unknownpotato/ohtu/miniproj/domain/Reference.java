@@ -29,6 +29,10 @@ public class Reference {
     public Set<String> getFields() {
         return fields.keySet();
     }
+    
+    public ReferenceType getType() {
+    	return type;
+    }
 
     /**
      * Checks if map contains the field to edit and puts the new value if field is found,

@@ -6,6 +6,7 @@
 package com.unknownpotato.ohtu.miniproj.io;
 
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
+import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
 
 /**
  *
@@ -13,6 +14,7 @@ import com.unknownpotato.ohtu.miniproj.domain.Reference;
  */
 public class BibtexFormatter {
     public static String convertReference(Reference ref){
+    	ReferenceType type = ref.getType();
 		return null;    	
     }
 }
