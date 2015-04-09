@@ -1,12 +1,17 @@
 
 package com.unknownpotato.ohtu.miniproj;
 
+import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceFactory;
 import com.unknownpotato.ohtu.miniproj.domain.References;
 import com.unknownpotato.ohtu.miniproj.io.ConsoleIO;
 import com.unknownpotato.ohtu.miniproj.ui.TextUI;
+import com.unknownpotato.ohtu.miniproj.io.BibtexFormatter;
 
-
+/**
+ *
+ * @author axwikstr
+ */
 public class App {
     public static void main(String[] args) {
         References references = new References();

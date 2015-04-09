@@ -12,6 +12,7 @@ public class Reference {
 
     private Map<String, String> fields;
     private ReferenceType type;
+    private String name;
 
     protected Reference(ReferenceType type) {
         this.type = type;
@@ -29,6 +30,10 @@ public class Reference {
     public Set<String> getFieldKeys() {
         return fields.keySet();
     }
+    
+    public ReferenceType getType() {
+    	return type;
+    }
 
     /**
      * Checks if map contains the field to edit and puts the new value if field is found,
@@ -43,4 +48,12 @@ public class Reference {
             fields.put(key, value);
         }
     }
+
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name){
+		this.name = name;
+	}
 }
