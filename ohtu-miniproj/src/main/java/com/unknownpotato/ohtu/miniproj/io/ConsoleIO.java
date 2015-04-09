@@ -1,16 +1,17 @@
-
 package com.unknownpotato.ohtu.miniproj.io;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ConsoleIO implements IO {
-    
+
     private Scanner scanner;
     private List<String> prints;
 
-    public ConsoleIO () {
+    public ConsoleIO() {
         scanner = new Scanner(System.in);
         prints = new ArrayList<String>();
     }
@@ -34,7 +35,7 @@ public class ConsoleIO implements IO {
     }
 
     @Override
-    public void getPrints() {
+    public List<String> getPrints() {
         return prints;
     }
 }
