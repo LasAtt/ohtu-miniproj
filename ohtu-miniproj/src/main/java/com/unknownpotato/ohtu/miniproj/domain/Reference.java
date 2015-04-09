@@ -12,6 +12,7 @@ public class Reference {
 
     private Map<String, String> fields;
     private ReferenceType type;
+    private String name;
 
     protected Reference(ReferenceType type) {
         this.type = type;
@@ -47,4 +48,12 @@ public class Reference {
             fields.put(key, value);
         }
     }
+
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name){
+		this.name = name;
+	}
 }
