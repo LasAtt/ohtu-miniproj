@@ -7,11 +7,13 @@ package com.unknownpotato.ohtu.miniproj.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author axwikstr
  */
+@Component
 public class References {
     private List<Reference> refs;
     

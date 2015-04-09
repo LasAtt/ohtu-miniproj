@@ -5,14 +5,19 @@
  */
 package com.unknownpotato.ohtu.miniproj.domain;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 /**
  * Provides methods for creating reference-classes with varying parameters.
  */
+@Component
 public class ReferenceFactory {
     
     private static References references;
     
-      public ReferenceFactory(References references) {
+    @Autowired
+    public ReferenceFactory(References references) {
         this.references = references;
     }
     

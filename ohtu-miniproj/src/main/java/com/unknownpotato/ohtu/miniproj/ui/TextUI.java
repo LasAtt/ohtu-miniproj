@@ -9,17 +9,22 @@ import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceFactory;
 import com.unknownpotato.ohtu.miniproj.domain.References;
 import com.unknownpotato.ohtu.miniproj.io.ConsoleIO;
+import com.unknownpotato.ohtu.miniproj.io.IO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author axwikstr
  */
+@Component
 public class TextUI {
 
-    private ConsoleIO io = new ConsoleIO();
+    private IO io;
     private References references;
 
-    public TextUI(References references) {
+    @Autowired
+    public TextUI(References references, IO io) {
         this.references = references;
     }
 
@@ -35,18 +40,14 @@ public class TextUI {
             switch (choice) {
                 case 1:
                     addReference();
-                    continue;
                 case 2:
                     listReferences();
-                    continue;
                 case 3:
                     exportToBibTex();
-                    continue;
                 case 4:
                     break outerloop;
                 default:
                     break;
-
             }
         }
     }
