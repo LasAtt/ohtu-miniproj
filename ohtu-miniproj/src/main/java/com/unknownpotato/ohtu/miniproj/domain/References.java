@@ -21,7 +21,7 @@ public class References {
     
     public void addReference(Reference r) {
         refs.add(r);
-    };
+    }
     
     public List<Reference> getReferences() {
         return refs;
