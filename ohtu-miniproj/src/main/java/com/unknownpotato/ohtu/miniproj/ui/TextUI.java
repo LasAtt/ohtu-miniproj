@@ -25,6 +25,7 @@ public class TextUI {
 
     public void run() {
         int choice = 0;
+        outerloop:
         while (true) {
             System.out.println("Type 1 to add a new book type reference, 2 to list all book type references, 3 to export to BibTex or 4 to quit");
             try {
@@ -43,7 +44,8 @@ public class TextUI {
                     exportToBibTex();
                     continue;
                 case 4:
-                    break;
+                    break outerloop;
+                    
             }
         }
     }
