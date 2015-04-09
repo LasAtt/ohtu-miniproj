@@ -5,9 +5,13 @@
  */
 package com.unknownpotato.ohtu.miniproj;
 
+
+import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceFactory;
 import com.unknownpotato.ohtu.miniproj.domain.References;
+import com.unknownpotato.ohtu.miniproj.io.BibtexFormatter;
 import com.unknownpotato.ohtu.miniproj.ui.TextUI;
+
 
 /**
  *
