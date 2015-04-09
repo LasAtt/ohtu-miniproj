@@ -1,6 +1,5 @@
-target/
+target/*
 .settings/
 .classpath
 .project
-target/ohtu-miniproj-1.0-SNAPSHOT.jar
 
