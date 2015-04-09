@@ -20,7 +20,7 @@ public interface IO {
     int readInt(String prompt);
     /**
      * Print a line to output
-     * @param line to be printed
+     * @param toPrint line to be printed
      */
     void print(String toPrint);
     /**
