@@ -8,6 +8,7 @@ package com.unknownpotato.ohtu.miniproj.ui;
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceFactory;
 import com.unknownpotato.ohtu.miniproj.domain.References;
+import com.unknownpotato.ohtu.miniproj.io.ConsoleIO;
 import java.util.Scanner;
 
 /**
@@ -16,7 +17,8 @@ import java.util.Scanner;
  */
 public class TextUI {
 
-    private static Scanner reader = new Scanner(System.in);
+    private ConsoleIO io = new ConsoleIO();
+    private Scanner reader = new Scanner(System.in);
     private References references;
 
     public TextUI(References references) {
@@ -29,7 +31,7 @@ public class TextUI {
         while (true) {
             System.out.println("Type 1 to add a new book type reference, 2 to list all book type references, 3 to export to BibTex or 4 to quit");
             try {
-                choice = Integer.parseInt(reader.nextLine());
+                choice = io.readInt(reader.nextLine());
             } catch (Exception ex) {
                 continue;
             }
@@ -54,11 +56,11 @@ public class TextUI {
 
     public void addReference() {
         System.out.println("Author: ");
-        String author = reader.nextLine();
+        String author = io.readLine(reader.nextLine());
         System.out.println("Title: ");
-        String title = reader.nextLine();
+        String title = io.readLine(reader.nextLine());
         System.out.println("Publisher: ");
-        String publisher = reader.nextLine();
+        String publisher = io.readLine(reader.nextLine());
         System.out.println("Year: ");
         String year = reader.nextLine();
         Reference ref = ReferenceFactory.createBookReference(author, title, publisher, year);
