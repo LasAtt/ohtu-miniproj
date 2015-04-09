@@ -10,5 +10,16 @@ package com.unknownpotato.ohtu.miniproj.domain;
  * @author axwikstr
  */
 public enum ReferenceType {
-    BOOK,ARTICLE
+
+    BOOK({"author", "title", "year", "publisher"}, { "volume", "number", "series", "address", "edition", "month", "note" }),
+    ARTICLE({"author", "title","journal", "year", "volume"}, {"number","pages","month","note","key"});
+    
+    private final String[] requiredFields, optionalFields;
+
+    private ReferenceType(String[] requiredFields, String[] optionalFields) {
+        this.requiredFields = requiredFields;
+        this.optionalFields = optionalFields;
+    }
+    
+    
 }
