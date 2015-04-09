@@ -4,15 +4,18 @@ description 'User can add a new reference to the program'
 
 scenario "user can add a correctly formatted book type reference", {
     given 'reference add attempt', {
-       references = new References()
-       references.addReference("test", "test", "test");
+        References references = new References()
+        ReferenceFactory factory = new ReferenceFactory(references)
+        TextUI ui = new TextUI(references)
+        StubIO io = new StubIO()
+        io.
     }
 
     when 'valid reference information is entered', {
-       addedReference = references.getReference("test").getName()
+       ui.run()
     }
 
     then 'new reference has been added' {
-       io.getPrints().shouldHave("logged in")
+       io.getPrints().shouldHave("You have added a new book type reference with the following information:")
     }
 }**/
