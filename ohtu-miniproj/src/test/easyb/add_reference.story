@@ -13,6 +13,6 @@ scenario "user can add a correctly formatted book type reference", {
     }
 
     then 'new reference has been added' {
-       addedReference.shouldHave("test")
+       io.getPrints().shouldHave("logged in")
     }
 }**/

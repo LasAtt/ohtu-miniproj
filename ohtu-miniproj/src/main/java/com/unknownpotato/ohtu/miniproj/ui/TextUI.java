@@ -8,7 +8,7 @@ package com.unknownpotato.ohtu.miniproj.ui;
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceFactory;
 import com.unknownpotato.ohtu.miniproj.domain.References;
-import java.util.Scanner;
+import com.unknownpotato.ohtu.miniproj.io.ConsoleIO;
 
 /**
  *
@@ -16,7 +16,7 @@ import java.util.Scanner;
  */
 public class TextUI {
 
-    private static Scanner reader = new Scanner(System.in);
+    private ConsoleIO io = new ConsoleIO();
     private References references;
 
     public TextUI(References references) {
@@ -27,9 +27,8 @@ public class TextUI {
         int choice = 0;
         outerloop:
         while (true) {
-            System.out.println("Type 1 to add a new book type reference, 2 to list all book type references, 3 to export to BibTex or 4 to quit");
             try {
-                choice = Integer.parseInt(reader.nextLine());
+                choice = io.readInt("Type 1 to add a new book type reference, 2 to list all book type references, 3 to export to BibTex or 4 to quit\n");
             } catch (Exception ex) {
                 continue;
             }
@@ -45,34 +44,32 @@ public class TextUI {
                     continue;
                 case 4:
                     break outerloop;
-                    
+                default:
+                    break;
+
             }
         }
     }
 
     public void addReference() {
-        System.out.println("Author: ");
-        String author = reader.nextLine();
-        System.out.println("Title: ");
-        String title = reader.nextLine();
-        System.out.println("Publisher: ");
-        String publisher = reader.nextLine();
-        System.out.println("Year: ");
-        String year = reader.nextLine();
+        String author = io.readLine("Author:\n");
+        String title = io.readLine("Title:\n");
+        String publisher = io.readLine("Publisher:\n");
+        String year = io.readLine("Year:\n");
         Reference ref = ReferenceFactory.createBookReference(author, title, publisher, year);
-        System.out.println("You have added a new book type reference with the following information:");
-        System.out.println("Author: " + ref.getField("author") + " Title: " + ref.getField("title")
+        io.print("You have added a new book type reference with the following information:");
+        io.print("Author: " + ref.getField("author") + " Title: " + ref.getField("title")
                 + " Publisher: " + ref.getField("publisher") + " Year: " + ref.getField("year"));
     }
 
     public void listReferences() {
         for (Reference reference : references.getReferences()) {
-            System.out.println("Author: " + reference.getField("author") + " Title: " + reference.getField("title")
+            io.print("Author: " + reference.getField("author") + " Title: " + reference.getField("title")
                     + " Publisher: " + reference.getField("publisher") + " Year: " + reference.getField("year"));
         }
     }
 
     public void exportToBibTex() {
-        System.out.println("To be implemented!");
+        io.print("To be implemented!");
     }
 }
