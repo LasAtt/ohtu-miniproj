@@ -4,4 +4,5 @@ public interface IO {
     String readLine(String prompt);
     int readInt(String prompt);
     void print(String toPrint);
+    List<String> getPrints();
 }
