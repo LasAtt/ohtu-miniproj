@@ -45,6 +45,8 @@ public class TextUI {
                     continue;
                 case 4:
                     break outerloop;
+                default:
+                    break;
                     
             }
         }
