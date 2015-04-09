@@ -1,3 +1,4 @@
+
 package com.unknownpotato.ohtu.miniproj.domain;
 
 import com.unknownpotato.ohtu.miniproj.domain.References;
