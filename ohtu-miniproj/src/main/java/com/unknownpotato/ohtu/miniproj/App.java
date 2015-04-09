@@ -5,9 +5,13 @@
  */
 package com.unknownpotato.ohtu.miniproj;
 
+
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceFactory;
+import com.unknownpotato.ohtu.miniproj.domain.References;
 import com.unknownpotato.ohtu.miniproj.io.BibtexFormatter;
+import com.unknownpotato.ohtu.miniproj.ui.TextUI;
+
 
 /**
  *
@@ -15,10 +19,9 @@ import com.unknownpotato.ohtu.miniproj.io.BibtexFormatter;
  */
 public class App {
     public static void main(String[] args) {
-    	Reference ref = ReferenceFactory.createBookReference("Victor Bankowski",
-				"a Dive into the Rust Programming Language",
-				"Unknownpotato publishing", "2051");
-		ref.setName("Bankowski2051");
-		System.out.println(BibtexFormatter.convertReference(ref));
+        References references = new References();
+        ReferenceFactory factory = new ReferenceFactory(references);
+        TextUI textUi = new TextUI(references);
+        textUi.run();
     }
 }

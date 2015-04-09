@@ -33,7 +33,7 @@ public class BibtexFormatter {
 		builder.append(ref.getName());
 		builder.append(",\n");
 		String value = "";
-		for (String field: ref.getFields()){
+		for (String field: ref.getFieldKeys()){
 			value = ref.getField(field);
 			if(value!=""){
 				builder.append(field);
