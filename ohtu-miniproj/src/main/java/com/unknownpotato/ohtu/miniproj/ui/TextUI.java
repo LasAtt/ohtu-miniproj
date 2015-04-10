@@ -26,6 +26,7 @@ public class TextUI {
     @Autowired
     public TextUI(References references, IO io) {
         this.references = references;
+        this.io = io;
     }
 
     public void run() {
@@ -40,10 +41,13 @@ public class TextUI {
             switch (choice) {
                 case 1:
                     addReference();
+                    continue;
                 case 2:
                     listReferences();
+                    continue;
                 case 3:
                     exportToBibTex();
+                    continue;
                 case 4:
                     break outerloop;
                 default:

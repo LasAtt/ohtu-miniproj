@@ -16,11 +16,15 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  */
 public class App {
     public static void main(String[] args) {
-        ApplicationContext ctx = new FileSystemXmlApplicationContext("src/main/resources/spring-context.xml");
-
-        References references = ctx.getBean(References.class);
-        ReferenceFactory factory = ctx.getBean(ReferenceFactory.class);
-        TextUI textUi = ctx.getBean(TextUI.class);
+//        ApplicationContext ctx = new FileSystemXmlApplicationContext("src/main/resources/spring-context.xml");
+//
+//        References references = ctx.getBean(References.class);
+//        ReferenceFactory factory = ctx.getBean(ReferenceFactory.class);
+//        TextUI textUi = ctx.getBean(TextUI.class);
+        
+        References references = new References();
+        ReferenceFactory factory = new ReferenceFactory(references);
+        TextUI textUi = new TextUI(references, new ConsoleIO());
         textUi.run();
     }
 }
