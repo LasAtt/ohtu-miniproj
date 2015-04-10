@@ -8,7 +8,9 @@ package com.unknownpotato.ohtu.miniproj.ui;
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceFactory;
 import com.unknownpotato.ohtu.miniproj.domain.References;
+import com.unknownpotato.ohtu.miniproj.io.BibtexFormatter;
 import com.unknownpotato.ohtu.miniproj.io.ConsoleIO;
+import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
 import com.unknownpotato.ohtu.miniproj.io.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -62,19 +64,30 @@ public class TextUI {
         String publisher = io.readLine("Publisher:\n");
         String year = io.readLine("Year:\n");
         Reference ref = ReferenceFactory.createBookReference(author, title, publisher, year);
-        io.print("You have added a new book type reference with the following information:");
-        io.print("Author: " + ref.getField("author") + " Title: " + ref.getField("title")
-                + " Publisher: " + ref.getField("publisher") + " Year: " + ref.getField("year"));
+        io.print("You have added a new book type reference!");
     }
 
     public void listReferences() {
-        for (Reference reference : references.getReferences()) {
-            io.print("Author: " + reference.getField("author") + " Title: " + reference.getField("title")
-                    + " Publisher: " + reference.getField("publisher") + " Year: " + reference.getField("year"));
+        if (references.getReferences().isEmpty()) {
+            io.print("No references found!");
+        } else {
+            io.print("Book type references:");
+            for (Reference reference : references.getReferences()) {
+                io.print("Author: " + reference.getField("author") + " Title: " + reference.getField("title")
+                        + " Publisher: " + reference.getField("publisher") + " Year: " + reference.getField("year"));
+            }
         }
     }
 
     public void exportToBibTex() {
-        io.print("To be implemented!");
+        if (references.getReferences().isEmpty()) {
+            io.print("No references found!");
+        } else {
+            FileWriterHandler writer = new FileWriterHandler("BibTex_export.txt");
+            for (Reference reference : references.getReferences()) {
+                writer.writeTo(BibtexFormatter.convertReference(reference));
+            }
+            io.print("Export complete!");
+        }
     }
 }

@@ -1,20 +1,23 @@
-/**import com.unknownpotato.com.ohtu.miniproj.*
+import com.unknownpotato.ohtu.miniproj.*
+import com.unknownpotato.ohtu.miniproj.domain.*
+import com.unknownpotato.ohtu.miniproj.io.*
+import com.unknownpotato.ohtu.miniproj.ui.*
 
 description 'User can add a new reference to the program'
 
 scenario "user can add a correctly formatted book type reference", {
     given 'reference add attempt', {
-        References references = new References()
-        ReferenceFactory factory = new ReferenceFactory(references)
-        StubIO io = new StubIO("1", "test", "test", "test", "test")
-        TextUI ui = new TextUI(references, io)
+        references = new References()
+        factory = new ReferenceFactory(references)
+        io = new StubIO("1", "test", "test", "test", "test", "4")
+        ui = new TextUI(references, io)
     }
 
     when 'valid reference information is entered', {
        ui.run()
     }
 
-    then 'new reference has been added' {
-       io.getPrints().shouldHave("You have added a new book type reference with the following information:")
+    then 'new reference has been added', {
+       io.getPrints().shouldHave("You have added a new book type reference!")
     }
-}**/
+}
