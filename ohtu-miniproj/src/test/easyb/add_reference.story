@@ -6,8 +6,8 @@ scenario "user can add a correctly formatted book type reference", {
     given 'reference add attempt', {
         References references = new References()
         ReferenceFactory factory = new ReferenceFactory(references)
-        TextUI ui = new TextUI(references)
         StubIO io = new StubIO("1", "test", "test", "test", "test")
+        TextUI ui = new TextUI(references, io)
     }
 
     when 'valid reference information is entered', {
