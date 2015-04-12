@@ -3,13 +3,13 @@ import com.unknownpotato.ohtu.miniproj.domain.*
 import com.unknownpotato.ohtu.miniproj.io.*
 import com.unknownpotato.ohtu.miniproj.ui.*
 
-description 'User can list the references stored in the program'
+description 'User can export the references to a BibTex file'
 
-scenario "user can list all added book type references if there are no such references", {
-    given 'reference listing attempt', {
+scenario "user can attempt to export when there are no references", {
+    given 'reference export attempt', {
        references = new References()
        factory = new ReferenceFactory(references)
-       io = new StubIO("2", "4")
+       io = new StubIO("3", "4")
        ui = new TextUI(references, io)
     }
 
@@ -22,19 +22,19 @@ scenario "user can list all added book type references if there are no such refe
     }
 }
 
-scenario "user can list all added book type references if there are such references", {
-    given 'reference listing attempt', {
+scenario "user can export the references to a BibTex file", {
+    given 'export attempt', {
        references = new References()
        factory = new ReferenceFactory(references)
-       io = new StubIO("1", "test", "test", "test", "test", "2", "4")
+       io = new StubIO("1", "test", "test", "test", "test", "3", "4")
        ui = new TextUI(references, io)
     }
 
-    when 'references found', {
+    when 'export is being attempted', {
        ui.run()
     }
 
-    then 'references are listed', {
-       io.getPrints().shouldHave("Author: test Title: test Publisher: test Year: test")
+    then 'the export is completed', {
+       io.getPrints().shouldHave("Export complete!")
     }
 }
