@@ -67,16 +67,16 @@ public class TextUI {
         String publisher = io.readLine("Publisher:\n");
         String year = io.readLine("Year:\n");
         Reference ref = ReferenceFactory.createBookReference(author, title, publisher, year);
-        io.print("You have added a new book type reference!");
+        io.println("You have added a new book type reference!");
     }
 
     public void listReferences() {
         if (references.getReferences().isEmpty()) {
-            io.print("No references found!");
+            io.println("No references found!");
         } else {
-            io.print("Book type references:");
+            io.println("Book type references:");
             for (Reference reference : references.getReferences()) {
-                io.print("Author: " + reference.getField("author") + " Title: " + reference.getField("title")
+                io.println("Author: " + reference.getField("author") + " Title: " + reference.getField("title")
                         + " Publisher: " + reference.getField("publisher") + " Year: " + reference.getField("year"));
             }
         }
@@ -84,7 +84,7 @@ public class TextUI {
 
     public void exportToBibTex() {
         if (references.getReferences().isEmpty()) {
-            io.print("No references found!");
+            io.println("No references found!");
         } else {
             try {
                 FileWriterHandler writer = new FileWriterHandler("BibTex_export.txt");
@@ -93,10 +93,10 @@ public class TextUI {
                 }
             } catch (IOException ex) {
                 Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
-                io.print("Export failed.");
+                io.println("Export failed.");
                 return;
             }
-            io.print("Export complete!");
+            io.println("Export complete!");
         }
     }
 }

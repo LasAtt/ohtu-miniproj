@@ -23,14 +23,13 @@ public class StubIO implements IO {
 
     @Override
     public int readInt(String prompt) {
-        print(prompt);
+        println(prompt);
         return Integer.parseInt(lines[i++]);
     }
 
     @Override
-    public void print(String toPrint) {
-        System.out.println(toPrint);
-        prints.add(toPrint);
+    public void println(String toPrint) {
+        print(toPrint + '\n');
     }
 
     @Override
@@ -40,10 +39,16 @@ public class StubIO implements IO {
     
     @Override
     public String readLine(String prompt) {
-        print(prompt);
+        println(prompt);
         if (i < lines.length) {
             return lines[i++];
         }
         return "";
+    }
+
+    @Override
+    public void print(String toPrint) {
+        System.out.print(toPrint);
+        prints.add(toPrint);
     }
 }

@@ -24,6 +24,11 @@ public interface IO {
      */
     void print(String toPrint);
     /**
+     * Print a line followed by line break to output.
+     * @param toPrint line to be printed
+     */
+    void println(String toPrint);
+    /**
      * Get everything printed in print()-method as an arraylis
      * @return all printed lines
      */

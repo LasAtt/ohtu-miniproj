@@ -1,5 +1,7 @@
 package com.unknownpotato.ohtu.miniproj.io;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.File;
@@ -22,41 +24,79 @@ import static org.mockito.Mockito.*;
  * @author atte
  */
 public class ConsoleIOTest {
-    
-    ConsoleIO io;   
-    Scanner scanner;
-    InputStream in;
-    PrintStream out;
-    
+
+    private ConsoleIO io;
+    private InputStream stdin;
+    private PrintStream stdout;
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private static final String INPUT1 = "Test Input";
+    private static final String INPUT2 = "12345";
+
     @Before
     public void setUp() {
-        in = mock(InputStream.class);
-        out = mock(PrintStream.class);
+        io = new ConsoleIO();
+        stdin = System.in;
+        stdout = System.out;
+        System.setOut(new PrintStream(outContent));
     }
-    /**
+
     @Test
     public void lineIsReadFromInput() {
-        io.readLine("prompt");
+        System.setIn(new ByteArrayInputStream(INPUT1.getBytes()));
+        assertEquals("Test Input", io.readLine("prompt"));
     }
-    
+
     @Test
-    public void promptIsWrittenToPrintsWhenReadingLine() {
-        when(scanner.nextLine()).thenReturn("test");
+    public void promptIsAddedToPrintsWhenReadingLine() {
+        System.setIn(new ByteArrayInputStream(INPUT1.getBytes()));
         io.readLine("prompt");
         assertTrue(io.getPrints().contains("prompt "));
     }
     
     @Test
-    public void integerIsReadFromInput() {
-        when(scanner.nextLine()).thenReturn("1");
-        assertEquals(1, io.readInt("prompt"));
+    public void promptIsWrittenToOutputStream() {
+        System.setIn(new ByteArrayInputStream(INPUT1.getBytes()));
+        io.readLine("prompt");
+        assertEquals("prompt ", outContent.toString());
     }
-    
+
     @Test
-    public void promptIsWrittenToPrintsWhenReadingInt() {
-        when(scanner.nextLine()).thenReturn("test");
+    public void integerIsReadFromInput() {
+        System.setIn(new ByteArrayInputStream(INPUT2.getBytes()));
+        assertEquals(12345, io.readInt("prompt"));
+    }
+
+    @Test
+    public void promptIsAddedToPrintsWhenReadingInt() {
+        System.setIn(new ByteArrayInputStream(INPUT2.getBytes()));
         io.readInt("prompt");
         assertTrue(io.getPrints().contains("prompt "));
     }
-    **/
+    
+    @Test
+    public void promptIsWrittenToOutputStreamWhenReadingInt() {
+        System.setIn(new ByteArrayInputStream(INPUT2.getBytes()));
+        io.readInt("prompt");
+        assertEquals("prompt ", outContent.toString());
+    }
+
+    @Test
+    public void printWritesParameterToOutputCorrectly() {
+        io.print(INPUT1);
+        assertEquals(INPUT1, outContent.toString());
+        assertTrue(io.getPrints().contains(INPUT1));
+    }
+    
+    @Test
+    public void printlnWritesParameterToOutputCorrectly() {
+        io.println(INPUT1);
+        assertEquals(INPUT1 + '\n', outContent.toString());
+        assertTrue(io.getPrints().contains(INPUT1 + '\n'));
+    }
+    
+    @After
+    public void after() {
+        System.setIn(stdin);
+        System.setOut(stdout);
+    }
 }

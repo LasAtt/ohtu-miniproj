@@ -38,14 +38,6 @@ public class FileWriterHandlerTest {
     public void fileIsCreatedUponConstruction() {
         assertTrue(file.exists());
     }
-    
-    @Test
-    public void stringIsWrittenCorrectlyToWileWhenInitializedWithStringAsParameter() throws IOException {
-        FileWriterHandler w = new FileWriterHandler("testy");
-        Scanner s = new Scanner(new File("testy"));
-        w.writeTo("test");
-        assertEquals("test", s.nextLine());
-    }
 
     @Test
     public void stringIsWrittenCorrectlyToFile() throws IOException {

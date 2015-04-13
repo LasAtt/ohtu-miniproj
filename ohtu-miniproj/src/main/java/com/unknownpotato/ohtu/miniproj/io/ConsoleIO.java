@@ -14,61 +14,42 @@ import org.springframework.stereotype.Component;
 public class ConsoleIO implements IO {
 
     /**
-     * Scanner to read input from InputStream
-     */
-    private Scanner scanner;
-    /**
      * History of prints made with this io.
      */
     private List<String> prints;
-    /**
-     * InputStream to read.
-     */
-    private final InputStream in;
-    /**
-     * PrintStream to print to.
-     */
-    private final PrintStream out;
 
-    /**
-     * Default constructor with no parameters. Uses systems default input and output streams.
-     */
     public ConsoleIO() {
-        this(System.in, System.out);
-    }
-    
-    /**
-     * Constructor for testing, where scanner is given as a parameter.
-     * @param in
-     * @param out
-     */
-    public ConsoleIO(InputStream in, PrintStream out) {
-        this.in = in;
-        this.out = out;
-        scanner = new Scanner(in);
         prints = new ArrayList<String>();
     }
 
     @Override
     public String readLine(String prompt) {
-        String print = prompt + " ";
-        out.print(print);
-        prints.add(print);
+        Scanner scanner = new Scanner(System.in);
+        printPrompt(prompt);
         return scanner.nextLine();
     }
 
     @Override
     public int readInt(String prompt) {
-        String print = prompt + " ";
-        out.print(print);
-        prints.add(print);
+        Scanner scanner = new Scanner(System.in);
+        printPrompt(prompt);
         return Integer.parseInt(scanner.nextLine());
     }
-
+    
+    private void printPrompt(String prompt) {
+        String print = prompt + " ";
+        System.out.print(print);
+        prints.add(print);
+    }
+    
     @Override
     public void print(String toPrint) {
-        out.println(toPrint);
+        System.out.print(toPrint);
         prints.add(toPrint);
+    }
+    
+    public void println(String toPrint) {
+        print(toPrint + '\n');
     }
 
     @Override
