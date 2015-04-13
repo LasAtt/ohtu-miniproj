@@ -8,7 +8,7 @@ description 'User can export the references to a BibTex file'
 scenario "user can attempt to export when there are no references", {
     given 'reference export attempt', {
        references = new References()
-       factory = new ReferenceFactory(references)
+       ReferenceFactory.setReferences(references);
        io = new StubIO("3", "4")
        ui = new TextUI(references, io)
     }
@@ -25,7 +25,7 @@ scenario "user can attempt to export when there are no references", {
 scenario "user can export the references to a BibTex file", {
     given 'export attempt', {
        references = new References()
-       factory = new ReferenceFactory(references)
+       ReferenceFactory.setReferences(references);
        io = new StubIO("1", "test", "test", "test", "test", "3", "4")
        ui = new TextUI(references, io)
     }

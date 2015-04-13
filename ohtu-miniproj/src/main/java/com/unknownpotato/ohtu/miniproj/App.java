@@ -23,7 +23,7 @@ public class App {
 //        TextUI textUi = ctx.getBean(TextUI.class);
         
         References references = new References();
-        ReferenceFactory factory = new ReferenceFactory(references);
+        ReferenceFactory.setReferences(references);
         TextUI textUi = new TextUI(references, new ConsoleIO());
         textUi.run();
     }

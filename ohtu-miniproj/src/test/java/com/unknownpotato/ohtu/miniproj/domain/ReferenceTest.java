@@ -14,11 +14,10 @@ public class ReferenceTest {
 
     public Reference ref;
     public References refs;
-    public ReferenceFactory reffactor;
 
     public ReferenceTest() {
         refs = new References();
-        reffactor = new ReferenceFactory(refs);
+        ReferenceFactory.setReferences(refs);
     }
 
     @Before
@@ -27,7 +26,7 @@ public class ReferenceTest {
     }
 
     /**
-     * Tests if editing nonexistence field returns error.
+     * Tests if editing nonexistent field returns error.
      */
     @Test
     public void editFieldReturnsErrorForNonexistentField() {

@@ -11,46 +11,48 @@ import org.junit.Test;
 
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceFactory;
+import com.unknownpotato.ohtu.miniproj.domain.References;
 
 public class BibtexFormatterTest {
 
-	Reference ref;
+    Reference ref;
 
-	@Before
-	public void setUp() {
-		ref = ReferenceFactory.createBookReference("Victor Bankowski",
-				"a Dive into the Rust Programming Language",
-				"Unknownpotato publishing", "2051");
-		ref.setName("Bankowski2051");
-	}
+    @Before
+    public void setUp() {
+        ReferenceFactory.setReferences(new References());
+        ref = ReferenceFactory.createBookReference("Victor Bankowski",
+                "a Dive into the Rust Programming Language",
+                "Unknownpotato publishing", "2051");
+        ref.setName("Bankowski2051");
+    }
 
-	@Test
-	public void outputIsCorrectTest() {
-		String formatted = BibtexFormatter.convertReference(ref);
-		Scanner scanner = new Scanner(formatted);
-		
-		assertEquals("@Book{Bankowski2051," ,scanner.nextLine());
-		Set<String> lines = new HashSet<String>();
-		
-		lines.add("year = \"2051\",");
-		lines.add("publisher = \"Unknownpotato publishing\",");
-		lines.add("author = \"Victor Bankowski\",");
-		lines.add("title = \"a Dive into the Rust Programming Language\",");
-		
-		while(scanner.hasNextLine()){
-			String line = scanner.nextLine();
-			if(lines.isEmpty()){
-				assertEquals("}", line);
-				return;
-			}
-			if (lines.contains(line)){
-				lines.remove(line);
-			} else {
-				fail("Line was not expected: "+line);
-			}
-		}
-		
-		fail("Too few lines");
-	}
+    @Test
+    public void outputIsCorrectTest() {
+        String formatted = BibtexFormatter.convertReference(ref);
+        Scanner scanner = new Scanner(formatted);
+
+        assertEquals("@Book{Bankowski2051,", scanner.nextLine());
+        Set<String> lines = new HashSet<String>();
+
+        lines.add("year = \"2051\",");
+        lines.add("publisher = \"Unknownpotato publishing\",");
+        lines.add("author = \"Victor Bankowski\",");
+        lines.add("title = \"a Dive into the Rust Programming Language\",");
+
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (lines.isEmpty()) {
+                assertEquals("}", line);
+                return;
+            }
+            if (lines.contains(line)) {
+                lines.remove(line);
+            } else {
+                fail("Line was not expected: " + line);
+            }
+        }
+
+        fail("Too few lines");
+    }
 
 }

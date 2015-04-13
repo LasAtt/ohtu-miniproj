@@ -8,7 +8,7 @@ description 'User can list the references stored in the program'
 scenario "user can list all added book type references if there are no such references", {
     given 'reference listing attempt', {
        references = new References()
-       factory = new ReferenceFactory(references)
+       ReferenceFactory.setReferences(references);
        io = new StubIO("2", "4")
        ui = new TextUI(references, io)
     }
@@ -25,7 +25,7 @@ scenario "user can list all added book type references if there are no such refe
 scenario "user can list all added book type references if there are such references", {
     given 'reference listing attempt', {
        references = new References()
-       factory = new ReferenceFactory(references)
+       ReferenceFactory.setReferences(references);
        io = new StubIO("1", "test", "test", "test", "test", "2", "4")
        ui = new TextUI(references, io)
     }

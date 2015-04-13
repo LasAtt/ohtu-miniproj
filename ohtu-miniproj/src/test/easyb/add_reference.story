@@ -8,7 +8,7 @@ description 'User can add a new reference to the program'
 scenario "user can add a correctly formatted book type reference", {
     given 'reference add attempt', {
         references = new References()
-        factory = new ReferenceFactory(references)
+        ReferenceFactory.setReferences(references);
         io = new StubIO("1", "test", "test", "test", "test", "4")
         ui = new TextUI(references, io)
     }
