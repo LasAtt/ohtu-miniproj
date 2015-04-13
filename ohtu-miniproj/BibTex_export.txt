@@ -1,24 +1,6 @@
 @Book{null,
-author = "test",
-title = "test",
-year = "test",
-publisher = "test",
-}
-@Book{null,
-author = "test",
-title = "stet",
-year = "test",
-publisher = "test",
-}
-@Book{null,
-author = "test2",
-title = "test2",
-year = "test2",
-publisher = "test2",
-}
-@Book{null,
-author = "test",
-title = "test",
-year = "test",
-publisher = "test",
+author = "harry potter",
+title = "lel",
+year = "1992",
+publisher = "kek",
 }

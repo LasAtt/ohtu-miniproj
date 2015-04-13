@@ -12,6 +12,9 @@ import com.unknownpotato.ohtu.miniproj.io.BibtexFormatter;
 import com.unknownpotato.ohtu.miniproj.io.ConsoleIO;
 import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
 import com.unknownpotato.ohtu.miniproj.io.IO;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -83,9 +86,15 @@ public class TextUI {
         if (references.getReferences().isEmpty()) {
             io.print("No references found!");
         } else {
-            FileWriterHandler writer = new FileWriterHandler("BibTex_export.txt");
-            for (Reference reference : references.getReferences()) {
-                writer.writeTo(BibtexFormatter.convertReference(reference));
+            try {
+                FileWriterHandler writer = new FileWriterHandler("BibTex_export.txt");
+                for (Reference reference : references.getReferences()) {
+                    writer.writeTo(BibtexFormatter.convertReference(reference));
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+                io.print("Export failed.");
+                return;
             }
             io.print("Export complete!");
         }
