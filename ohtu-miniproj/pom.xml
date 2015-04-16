@@ -96,6 +96,7 @@
                             <mainClass>com.unknownpotato.ohtu.miniproj.App</mainClass>
                         </manifest>
                     </archive>
+                    <argLine>-XX:-UseSplitVerifier</argLine>
                 </configuration>
             </plugin>
             <plugin>
