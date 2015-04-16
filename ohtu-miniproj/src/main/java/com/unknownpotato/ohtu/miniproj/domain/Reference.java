@@ -13,7 +13,7 @@ public class Reference {
     private ReferenceType type;
     private String name;
 
-    protected Reference(ReferenceType type) {
+    private Reference(ReferenceType type) {
         this.type = type;
         this.fields = new HashMap();
     }
