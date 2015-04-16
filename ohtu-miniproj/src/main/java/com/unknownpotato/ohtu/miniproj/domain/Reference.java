@@ -24,6 +24,7 @@ public class Reference {
     private static String generateReferenceName(String name, Map<String, String> fields) {
         String generatedName = fields.get("author");
         generatedName = generatedName.substring(generatedName.lastIndexOf(" ") + 1);
+        generatedName = generatedName.toLowerCase();
         String year = fields.get("year");
         generatedName += year.substring(2);
         return generatedName;
