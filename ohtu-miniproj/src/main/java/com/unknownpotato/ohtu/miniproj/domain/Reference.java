@@ -63,6 +63,10 @@ public class Reference {
         return type;
     }
 
+    public Map<String, String> getFields() {
+        return fields;
+    }
+
     /**
      * Checks if map contains the field to edit and puts the new value if field
      * is found, else throws error.
