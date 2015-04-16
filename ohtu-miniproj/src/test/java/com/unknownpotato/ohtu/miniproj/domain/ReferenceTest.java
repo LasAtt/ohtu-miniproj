@@ -78,7 +78,7 @@ public class ReferenceTest {
         fields.put("publisher", "Publisher");
         ref = Reference.createReference(ReferenceType.BOOK, "", fields);
         
-        assertEquals("Author90", ref.getName());
+        assertEquals("author90", ref.getName());
     }
     
         @Test
