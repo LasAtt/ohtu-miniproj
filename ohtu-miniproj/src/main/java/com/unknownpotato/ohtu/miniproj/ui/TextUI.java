@@ -100,8 +100,16 @@ public class TextUI {
         } else {
             try {
                 FileWriterHandler writer = new FileWriterHandler("BibTex_export.txt");
+                String bibtex;
                 for (Reference reference : references.getReferences()) {
-                    writer.writeTo(BibtexFormatter.convertReference(reference));
+                	try{
+                		bibtex = BibtexFormatter.convertReference(reference);
+                	} catch (Exception e){
+                		System.out.println("Could not convert reference: "+ reference);
+                		continue;
+                	}
+                	
+                	writer.writeTo(bibtex);
                 }
             } catch (IOException ex) {
                 Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
