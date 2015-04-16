@@ -13,13 +13,14 @@ public class Reference {
     private ReferenceType type;
     private String name;
 
-    private Reference(ReferenceType type) {
+    private Reference(ReferenceType type, String name) {
+        this.name = name;
         this.type = type;
         this.fields = new HashMap();
     }
 
-    public static Reference createReference(ReferenceType type, Map<String, String> fields) {
-        Reference ref = new Reference(type);
+    public static Reference createReference(ReferenceType type, String name, Map<String, String> fields) {
+        Reference ref = new Reference(type,name);
         for (String f : type.getRequiredFields()) {
             ref.addField(f, fields.get(f));
         }
