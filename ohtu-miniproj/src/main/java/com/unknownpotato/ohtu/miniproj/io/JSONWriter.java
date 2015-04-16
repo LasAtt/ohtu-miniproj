@@ -20,7 +20,7 @@ import org.json.JSONObject;
  */
 public class JSONWriter {
 
-    public static void saveState(References ref, String filename) {
+    public static void saveReferences(References ref, String filename) {
         try {
             FileWriterHandler w = new FileWriterHandler(filename);
             JSONObject jo = new JSONObject();
