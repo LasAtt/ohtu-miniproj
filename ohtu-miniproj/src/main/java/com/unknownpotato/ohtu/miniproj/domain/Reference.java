@@ -17,10 +17,21 @@ public class Reference {
         this.name = name;
         this.type = type;
         this.fields = new HashMap();
+        if (this.name == null || name.isEmpty()) {
+            this.name = generateReferenceName();
+        }
+    }
+
+    private String generateReferenceName() {
+        String generatedName = this.fields.get("author");
+        generatedName = generatedName.substring(generatedName.lastIndexOf(" ") + 1);
+        String year = this.fields.get("year");
+        generatedName += year.substring(2);
+        return generatedName;
     }
 
     public static Reference createReference(ReferenceType type, String name, Map<String, String> fields) {
-        Reference ref = new Reference(type,name);
+        Reference ref = new Reference(type, name);
         for (String f : type.getRequiredFields()) {
             ref.addField(f, fields.get(f));
         }
@@ -43,9 +54,9 @@ public class Reference {
     public Set<String> getFieldKeys() {
         return fields.keySet();
     }
-    
+
     public ReferenceType getType() {
-    	return type;
+        return type;
     }
 
     /**
@@ -63,11 +74,11 @@ public class Reference {
         }
     }
 
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name){
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

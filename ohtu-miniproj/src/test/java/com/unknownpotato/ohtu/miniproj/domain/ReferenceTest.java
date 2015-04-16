@@ -64,7 +64,7 @@ public class ReferenceTest {
     @Test
     public void getFieldSetReturnsRightSet(){
         Set set = ref.getFieldKeys();
-        assertEquals(11, set.size());
+        assertEquals(4, set.size());
         assertTrue(set.contains("author"));
         assertTrue(set.contains("title"));
     }
