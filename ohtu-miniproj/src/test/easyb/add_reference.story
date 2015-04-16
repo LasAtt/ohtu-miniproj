@@ -8,7 +8,6 @@ description 'User can add a new reference to the program'
 scenario "user can add a correctly formatted book type reference", {
     given 'reference add attempt', {
         references = new References()
-        ReferenceFactory.setReferences(references);
         io = new StubIO("1", "test", "test", "test", "test", "4")
         ui = new TextUI(references, io)
     }
@@ -18,6 +17,6 @@ scenario "user can add a correctly formatted book type reference", {
     }
 
     then 'new reference has been added', {
-       io.getPrints().shouldHave("You have added a new book type reference!")
+       io.getPrints().shouldHave("You have added a new reference!")
     }
 }
