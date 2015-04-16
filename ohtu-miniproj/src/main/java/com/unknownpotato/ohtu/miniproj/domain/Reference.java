@@ -14,24 +14,27 @@ public class Reference {
     private String name;
 
     private Reference(ReferenceType type, String name) {
+        
         this.name = name;
         this.type = type;
         this.fields = new HashMap();
-        if (this.name == null || name.isEmpty()) {
-            this.name = generateReferenceName();
-        }
+
     }
 
-    private String generateReferenceName() {
-        String generatedName = this.fields.get("author");
+    private static String generateReferenceName(String name, Map<String, String> fields) {
+        String generatedName = fields.get("author");
         generatedName = generatedName.substring(generatedName.lastIndexOf(" ") + 1);
-        String year = this.fields.get("year");
+        String year = fields.get("year");
         generatedName += year.substring(2);
         return generatedName;
     }
 
     public static Reference createReference(ReferenceType type, String name, Map<String, String> fields) {
-        Reference ref = new Reference(type, name);
+        String newName = name;
+        if(name.isEmpty()){
+            newName = generateReferenceName(name, fields);
+        }
+        Reference ref = new Reference(type, newName);
         for (String f : type.getRequiredFields()) {
             ref.addField(f, fields.get(f));
         }
