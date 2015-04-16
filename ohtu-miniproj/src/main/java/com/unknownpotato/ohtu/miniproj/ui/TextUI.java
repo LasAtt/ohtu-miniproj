@@ -64,18 +64,23 @@ public class TextUI {
     }
 
     public void addReference() {
-        String author = io.readLine("Author:\n");
-        String title = io.readLine("Title:\n");
-        String publisher = io.readLine("Publisher:\n");
-        String year = io.readLine("Year:\n");
-        Map<String, String> fields = new HashMap<String, String>();
-        fields.put("author", author);
-        fields.put("title", title);
-        fields.put("publisher", publisher);
-        fields.put("year", year);
-        Reference ref = Reference.createReference(ReferenceType.BOOK, "", fields);
-        references.addReference(ref);
-        io.println("You have added a new reference!");
+        int typeChoice = 0;
+        while (typeChoice < 1 || typeChoice > 2) {
+            try {
+                typeChoice = io.readInt("Type (1=book, 2=article):\n");
+            } catch (Exception ex) {
+            }
+        }
+        
+        ReferenceType type = null;
+        
+        if (typeChoice == 1) {
+            type = ReferenceType.BOOK;
+            askForFields(type);
+        } else if (typeChoice == 2) {
+            type = ReferenceType.ARTICLE;
+            askForFields(type);
+        }
     }
 
     public void listReferences() {
@@ -99,7 +104,7 @@ public class TextUI {
             io.println("No references found!");
         } else {
             try {
-                FileWriterHandler writer = new FileWriterHandler("BibTex_export.txt");
+                FileWriterHandler writer = new FileWriterHandler("BibTex_export.bib");
                 for (Reference reference : references.getReferences()) {
                     writer.writeTo(BibtexFormatter.convertReference(reference));
                 }
@@ -110,5 +115,30 @@ public class TextUI {
             }
             io.println("Export complete!");
         }
+    }
+    
+    public void askForFields(ReferenceType type) {
+        Map<String, String> fields = new HashMap<String, String>();
+        for (String field : type.getRequiredFields()) {
+            String fieldContent = io.readLine(field + ":\n");
+            fields.put(field, fieldContent);
+            
+        }
+        
+        for (String field : type.getOptionalFields()) {
+            String fieldContent = io.readLine(field + ":\n");
+            fields.put(field, fieldContent);
+        }
+//        String author = io.readLine("Author:\n");
+//        String title = io.readLine("Title:\n");
+//        String publisher = io.readLine("Publisher:\n");
+//        String year = io.readLine("Year:\n");
+//        fields.put("author", author);
+//        fields.put("title", title);
+//        fields.put("publisher", publisher);
+//        fields.put("year", year);
+        Reference ref = Reference.createReference(type, "", fields);
+        references.addReference(ref);
+        io.println("You have added a new reference!");
     }
 }

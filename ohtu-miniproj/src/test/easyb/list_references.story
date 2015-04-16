@@ -24,7 +24,7 @@ scenario "user can list all added book type references if there are no such refe
 scenario "user can list all added book type references if there are such references", {
     given 'reference listing attempt', {
        references = new References()
-       io = new StubIO("1", "test", "test", "test", "test", "2", "4")
+       io = new StubIO("1", "1", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "2", "4")
        ui = new TextUI(references, io)
     }
 
