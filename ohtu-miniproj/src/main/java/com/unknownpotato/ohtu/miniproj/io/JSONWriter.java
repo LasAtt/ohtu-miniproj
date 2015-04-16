@@ -5,10 +5,12 @@
  */
 package com.unknownpotato.ohtu.miniproj.io;
 
+import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.References;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,7 +24,15 @@ public class JSONWriter {
         try {
             FileWriterHandler w = new FileWriterHandler(filename);
             JSONObject jo = new JSONObject();
-            jo.put("references", ref.getReferences());
+            JSONArray ja = new JSONArray();
+            for (Reference r : ref.getReferences()) {
+                JSONObject rjo = new JSONObject();
+                rjo.put("name", r.getName());
+                rjo.put("type", r.getType().toString());
+                rjo.put("fields", r.getFields());
+                ja.put(rjo);
+            }
+            jo.put("references", ja);
             w.writeTo(jo.toString(4));
         } catch (IOException | JSONException ex) {
             Logger.getLogger(JSONWriter.class.getName()).log(Level.SEVERE, null, ex);
