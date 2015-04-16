@@ -14,13 +14,27 @@ public class Reference {
     private String name;
 
     private Reference(ReferenceType type, String name) {
+        
         this.name = name;
         this.type = type;
         this.fields = new HashMap();
+
+    }
+
+    private static String generateReferenceName(String name, Map<String, String> fields) {
+        String generatedName = fields.get("author");
+        generatedName = generatedName.substring(generatedName.lastIndexOf(" ") + 1);
+        String year = fields.get("year");
+        generatedName += year.substring(2);
+        return generatedName;
     }
 
     public static Reference createReference(ReferenceType type, String name, Map<String, String> fields) {
-        Reference ref = new Reference(type,name);
+        String newName = name;
+        if(name.isEmpty()){
+            newName = generateReferenceName(name, fields);
+        }
+        Reference ref = new Reference(type, newName);
         for (String f : type.getRequiredFields()) {
             ref.addField(f, fields.get(f));
         }
@@ -43,9 +57,9 @@ public class Reference {
     public Set<String> getFieldKeys() {
         return fields.keySet();
     }
-    
+
     public ReferenceType getType() {
-    	return type;
+        return type;
     }
 
     /**
@@ -63,11 +77,11 @@ public class Reference {
         }
     }
 
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name){
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

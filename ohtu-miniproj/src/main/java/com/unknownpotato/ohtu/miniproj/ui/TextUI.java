@@ -9,12 +9,12 @@ import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
 import com.unknownpotato.ohtu.miniproj.domain.References;
 import com.unknownpotato.ohtu.miniproj.io.BibtexFormatter;
-import com.unknownpotato.ohtu.miniproj.io.ConsoleIO;
 import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
 import com.unknownpotato.ohtu.miniproj.io.IO;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class TextUI {
         outerloop:
         while (true) {
             try {
-                choice = io.readInt("Type 1 to add a new book type reference, 2 to list all book type references, 3 to export to BibTex or 4 to quit\n");
+                choice = io.readInt("Type 1 to add a new reference, 2 to list all book type references, 3 to export to BibTex or 4 to quit\n");
             } catch (Exception ex) {
                 continue;
             }
@@ -68,24 +68,28 @@ public class TextUI {
         String title = io.readLine("Title:\n");
         String publisher = io.readLine("Publisher:\n");
         String year = io.readLine("Year:\n");
-        //Reference ref = ReferenceFactory.createBookReference(author, title, publisher, year);
-        Map<String,String> fields = new HashMap<String,String>();
+        Map<String, String> fields = new HashMap<String, String>();
         fields.put("author", author);
         fields.put("title", title);
         fields.put("publisher", publisher);
         fields.put("year", year);
-        Reference ref = Reference.createReference(ReferenceType.BOOK,"null", fields);
-        io.println("You have added a new book type reference!");
+        Reference ref = Reference.createReference(ReferenceType.BOOK, "", fields);
+        references.addReference(ref);
+        io.println("You have added a new reference!");
     }
 
     public void listReferences() {
+        Set<String> referenceFields = null;
         if (references.getReferences().isEmpty()) {
             io.println("No references found!");
         } else {
-            io.println("Book type references:");
+            io.println("All references:");
             for (Reference reference : references.getReferences()) {
-                io.println("Author: " + reference.getField("author") + " Title: " + reference.getField("title")
-                        + " Publisher: " + reference.getField("publisher") + " Year: " + reference.getField("year"));
+                referenceFields = reference.getFieldKeys();
+                for (String field : referenceFields) {
+                    io.print(field + ": " + reference.getField(field) + " ");
+                }
+                System.out.println("");
             }
         }
     }

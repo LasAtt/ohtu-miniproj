@@ -22,7 +22,7 @@ public class ReferenceTest {
         HashMap<String,String> fields = new HashMap<String,String>();
         fields.put("author", "Author");
         fields.put("title", "Title");
-        fields.put("year", "Year");
+        fields.put("year", "1990");
         fields.put("publisher", "Publisher");
         ref = Reference.createReference(ReferenceType.BOOK, "Book", fields);
         //ref = ReferenceFactory.createBookReference("Author", "Title", "Year", "Publisher");
@@ -64,9 +64,33 @@ public class ReferenceTest {
     @Test
     public void getFieldSetReturnsRightSet(){
         Set set = ref.getFieldKeys();
-        assertEquals(11, set.size());
+        assertEquals(4, set.size());
         assertTrue(set.contains("author"));
         assertTrue(set.contains("title"));
+    }
+    
+    @Test
+    public void generateNameForReferenceIfReferenceNameEmpty(){
+        HashMap<String,String> fields = new HashMap<>();
+        fields.put("author", "Author");
+        fields.put("title", "Title");
+        fields.put("year", "1990");
+        fields.put("publisher", "Publisher");
+        ref = Reference.createReference(ReferenceType.BOOK, "", fields);
+        
+        assertEquals("Author90", ref.getName());
+    }
+    
+        @Test
+    public void DontGenerateNameForReferenceIfReferenceGiven(){
+        HashMap<String,String> fields = new HashMap<>();
+        fields.put("author", "Author");
+        fields.put("title", "Title");
+        fields.put("year", "1990");
+        fields.put("publisher", "Publisher");
+        ref = Reference.createReference(ReferenceType.BOOK, "Coolname", fields);
+        
+        assertEquals("Coolname", ref.getName());
     }
             
 
