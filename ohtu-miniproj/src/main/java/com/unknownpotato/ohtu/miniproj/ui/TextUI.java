@@ -73,7 +73,7 @@ public class TextUI {
         fields.put("title", title);
         fields.put("publisher", publisher);
         fields.put("year", year);
-        Reference ref = Reference.createReference(ReferenceType.BOOK, "null", fields);
+        Reference ref = Reference.createReference(ReferenceType.BOOK, "", fields);
         references.addReference(ref);
         io.println("You have added a new reference!");
     }
