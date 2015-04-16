@@ -119,6 +119,24 @@
                     </storyReport>
                 </configuration>
             </plugin>
+            
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>0.32</version>
+                <configuration>
+                    <targetClasses>
+                        <param>com.unknownpotato.ohtu.miniproj*</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>com.unknownpotato.ohtu.miniproj*</param>
+                    </targetTests>
+                    <outputFormats>
+                        <value>XML</value>
+                        <value>HTML</value>
+                    </outputFormats>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

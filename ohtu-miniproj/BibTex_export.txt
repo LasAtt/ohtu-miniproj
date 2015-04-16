@@ -1,7 +1,0 @@
-@Book{null,
-author = "test",
-title = "test",
-year = "test",
-publisher = "test",
-}
-
