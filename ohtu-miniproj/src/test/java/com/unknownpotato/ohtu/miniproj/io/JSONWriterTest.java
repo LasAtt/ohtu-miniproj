@@ -57,6 +57,6 @@ public class JSONWriterTest {
     
     @Test
     public void writeTest() {
-        JSONWriter.saveState(refs, "test.json");
+        JSONWriter.saveReferences(refs, "test.json");
     }
 }
