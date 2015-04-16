@@ -11,6 +11,7 @@ import com.unknownpotato.ohtu.miniproj.domain.References;
 import java.util.HashMap;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,9 +21,9 @@ import static org.junit.Assert.*;
  *
  * @author axwikstr
  */
-public class JSONWriterTest {
+public class JSONIOTest {
     
-    public JSONWriterTest() {
+    public JSONIOTest() {
     }
     
     @BeforeClass
@@ -58,5 +59,13 @@ public class JSONWriterTest {
     @Test
     public void writeTest() {
         JSONWriter.saveReferences(refs, "test.json");
+    }
+    
+    @Test
+    public void readTest() {
+        References loadedRefs = JSONReader.loadReferences("test.json");
+        Assert.assertTrue(!loadedRefs.getReferences().isEmpty());
+        Assert.assertTrue(loadedRefs.getReference("Bankowski2051").getField("author").equals("Victor Bankowski"));
+        Assert.assertTrue(loadedRefs.getReference("Bankowski2051").getType() == ReferenceType.BOOK);
     }
 }
