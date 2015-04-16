@@ -29,7 +29,7 @@ public class BibtexFormatter {
 		builder.append("@Article{");
 		builder.append(ref.getName());
 		builder.append(",\n");
-		return null;
+		return writeFields(ref, builder).toString();
 	}
 
 	private String formatBook(Reference ref) {
@@ -37,11 +37,10 @@ public class BibtexFormatter {
 		builder.append("@Book{");
 		builder.append(ref.getName());
 		builder.append(",\n");
-		writeFields(ref, builder);
-		return builder.toString();
+		return writeFields(ref, builder).toString();
 	}
 
-	private void writeFields(Reference ref, StringBuilder builder) {
+	private StringBuilder writeFields(Reference ref, StringBuilder builder) {
 		String value = "";
 		for (String field : ref.getFieldKeys()) {
 			value = ref.getField(field);
@@ -53,5 +52,6 @@ public class BibtexFormatter {
 			}
 		}
 		builder.append("}\n");
+		return builder;
 	}
 }

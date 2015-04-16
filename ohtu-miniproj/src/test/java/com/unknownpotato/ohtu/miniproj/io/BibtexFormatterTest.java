@@ -37,7 +37,7 @@ public class BibtexFormatterTest {
     public void outputIsCorrectTest() {
     	String formatted = "";
     	try{
-    		BibtexFormatter.convertReference(ref);
+    		formatted = BibtexFormatter.convertReference(ref);
     	} catch (Exception e) {
     		fail("convertReference threw an exception: " + e);
     	}
