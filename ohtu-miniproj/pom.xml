@@ -70,9 +70,34 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>
+        
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>1.1</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.unknownpotato.ohtu.miniproj.App</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
@@ -117,24 +142,6 @@
                     <storyType>html</storyType>
                     <storyReport>${basedir}/target/easyb/easyb-report.html
                     </storyReport>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>0.32</version>
-                <configuration>
-                    <targetClasses>
-                        <param>com.unknownpotato.ohtu.miniproj*</param>
-                    </targetClasses>
-                    <targetTests>
-                        <param>com.unknownpotato.ohtu.miniproj*</param>
-                    </targetTests>
-                    <outputFormats>
-                        <value>XML</value>
-                        <value>HTML</value>
-                    </outputFormats>
                 </configuration>
             </plugin>
         </plugins>
