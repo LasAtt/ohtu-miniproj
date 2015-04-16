@@ -6,13 +6,15 @@
 package com.unknownpotato.ohtu.miniproj.ui;
 
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
-import com.unknownpotato.ohtu.miniproj.domain.ReferenceFactory;
+import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
 import com.unknownpotato.ohtu.miniproj.domain.References;
 import com.unknownpotato.ohtu.miniproj.io.BibtexFormatter;
 import com.unknownpotato.ohtu.miniproj.io.ConsoleIO;
 import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
 import com.unknownpotato.ohtu.miniproj.io.IO;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +68,13 @@ public class TextUI {
         String title = io.readLine("Title:\n");
         String publisher = io.readLine("Publisher:\n");
         String year = io.readLine("Year:\n");
-        Reference ref = ReferenceFactory.createBookReference(author, title, publisher, year);
+        //Reference ref = ReferenceFactory.createBookReference(author, title, publisher, year);
+        Map<String,String> fields = new HashMap<String,String>();
+        fields.put("author", author);
+        fields.put("title", title);
+        fields.put("publisher", publisher);
+        fields.put("year", year);
+        Reference ref = Reference.createReference(ReferenceType.BOOK,"null", fields);
         io.println("You have added a new book type reference!");
     }
 

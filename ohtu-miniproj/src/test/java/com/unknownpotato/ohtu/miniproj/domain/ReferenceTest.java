@@ -1,5 +1,6 @@
 package com.unknownpotato.ohtu.miniproj.domain;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Before;
@@ -15,14 +16,16 @@ public class ReferenceTest {
     public Reference ref;
     public References refs;
 
-    public ReferenceTest() {
-        refs = new References();
-        ReferenceFactory.setReferences(refs);
-    }
 
     @Before
     public void setUp() {
-        ref = ReferenceFactory.createBookReference("Author", "Title", "Year", "Publisher");
+        HashMap<String,String> fields = new HashMap<String,String>();
+        fields.put("author", "Author");
+        fields.put("title", "Title");
+        fields.put("year", "Year");
+        fields.put("publisher", "Publisher");
+        ref = Reference.createReference(ReferenceType.BOOK, "Book", fields);
+        //ref = ReferenceFactory.createBookReference("Author", "Title", "Year", "Publisher");
     }
 
     /**
