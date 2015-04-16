@@ -11,9 +11,26 @@ package com.unknownpotato.ohtu.miniproj.domain;
  */
 public enum ReferenceType {
 
-    BOOK(new String[]{"author", "title", "year", "publisher"}, new String[]{"volume", "number", "series", "address", "edition", "month", "note"}),
-    ARTICLE(new String[]{"author", "title", "journal", "year", "volume"}, new String[]{"number", "pages", "month", "note", "key"});
-
+    BOOK(new String[]{"author", "title", "year", "publisher"}, 
+         new String[]{"volume", "number", "series", "address", "edition", "month", "note"}),
+    ARTICLE(new String[]{"author", "title", "journal", "year", "volume"}, 
+            new String[]{"number", "pages", "month", "note", "key"}),
+    BOOKLET(new String[]{"title"}, 
+            new String[]{"author", "howpublished", "howpublished", "address", "month", "year", "note", "key"}),
+    INSTITUTION(new String[]{"title"}, 
+            new String[]{"author", "howpublished"}),
+    CONFERENCE(new String[]{"author", "title", "booktitle"}, 
+               new String[]{}),
+    INPROCEEDINGS(new String[]{"author", "title", "booktitle"}, 
+                  new String[]{}),
+    INBOOK(new String[]{"author/editor", "title", "chapter/pages", "publisher", "year"}, 
+           new String[]{"volume/number", "series", "type", "address", "edition", "month", "note", "key"}),
+    INCOLLECTION(new String[]{"author", "title", "booktitle", "publisher", "year"},
+                 new String[]{"editor", "volume/number", "series", "type", "chapter", "pages", "address", "edition", "month", "note", "key"}),
+    MANUAL(new String[]{"title"}, 
+           new String[]{"author", "organization"});
+    
+    
     private final String[] requiredFields, optionalFields;
 
     private ReferenceType(String[] requiredFields, String[] optionalFields) {
