@@ -28,13 +28,13 @@ public class FileReader {
     }
     
     public String readFile() throws FileNotFoundException {
-        Scanner scanner = new Scanner(file);
-        StringBuilder sb = new StringBuilder();
-        
-        while(scanner.hasNext()) {
-            sb.append(scanner.nextLine());
+        StringBuilder sb;
+        try (Scanner scanner = new Scanner(file)) {
+            sb = new StringBuilder();
+            while(scanner.hasNext()) {
+                sb.append(scanner.nextLine());
+            }
         }
-        
         return sb.toString();
     }
 }

@@ -69,11 +69,8 @@ public class TextUI {
     public void addReference() {
         int typeChoice = 0;
         while (typeChoice < 1 || typeChoice > 10) {
-            try {
-                typeChoice = io.readInt("Type (1=book, 2=article, 3=inproceedings, 4=booklet, "
-                        + "\n5=institution, 6=conference, 7=inbook, 8=incollection, 9=manual, 10=quit):\n");
-            } catch (Exception ex) {
-            }
+            typeChoice = io.readInt("Type (1=book, 2=article, 3=inproceedings, 4=booklet, "
+                    + "\n5=institution, 6=conference, 7=inbook, 8=incollection, 9=manual, 10=quit):\n");
         }
 
         ReferenceType type = null;
@@ -143,11 +140,11 @@ public class TextUI {
         } else {
             try {
                 FileWriterHandler writer = new FileWriterHandler("BibTex_export.txt");
-                
+
                 for (Reference reference : references.getReferences()) {
-                	writer.writeTo(BibtexFormatter.convertReference(reference));
+                    writer.writeTo(BibtexFormatter.convertReference(reference));
                 }
-                
+
             } catch (IOException ex) {
                 Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
                 io.println("Export failed!");
@@ -158,14 +155,14 @@ public class TextUI {
     }
 
     public void askForFields(ReferenceType type) {
-        Map<String, String> fields = new HashMap<String, String>();
+        Map<String, String> fields = new HashMap<>();
+
         for (String field : type.getRequiredFields()) {
             String fieldContent = io.readLine(field + ":\n");
             while (field.equals("year") && fieldContent.length() < 2) {
                 fieldContent = io.readLine(field + ":\n");
             }
             fields.put(field, fieldContent);
-
         }
 
         for (String field : type.getOptionalFields()) {

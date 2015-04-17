@@ -17,8 +17,9 @@ public class FileWriterHandler {
 
     /**
      * Constructor that creates the file that we want to write to.
+     *
      * @param file
-     * @throws IOException 
+     * @throws IOException
      */
     public FileWriterHandler(File file) throws IOException {
         this.file = file;
@@ -28,34 +29,50 @@ public class FileWriterHandler {
 
     /**
      * Constructor with String as parameter
+     *
      * @param file filename as string
-     * @throws IOException 
+     * @throws IOException
      */
     public FileWriterHandler(String file) throws IOException {
         this(new File(file));
     }
 
     /**
-     * Writes a single String to the end of the string.
+     * Writes a single String overwriting anything in the file.
+     *
      * @param toWrite String to be written
-     * @throws IOException 
+     * @throws IOException
      */
     public void writeTo(String toWrite) throws IOException {
-        try (FileWriter writer = new FileWriter(file, true)) {
-            writer.write(toWrite);
-            writer.write('\n');
+        try (FileWriter writer = new FileWriter(file, false)) {
+            writeTo(toWrite, writer);
         }
+    }
+    
+    /**
+     * Writes the given string with the given FileWriter.
+     * 
+     * @param toWrite string written
+     * @param writer FileWriter that does the writing
+     * @throws IOException 
+     */
+    private void writeTo(String toWrite, FileWriter writer) throws IOException {
+        writer.write(toWrite);
+        writer.write('\n');
     }
 
     /**
      * Writes all Strings given in a List to the file
+     *
      * @param toWrite all Strings to be written
-     * @throws IOException 
+     * @throws IOException
      */
     public void writeTo(List<String> toWrite) throws IOException {
-        for (String line : toWrite) {
-            writeTo(line);
+        try (FileWriter writer = new FileWriter(file, true)) {
+            for (String line : toWrite) {
+                writeTo(line, writer);
+            }
         }
     }
-    
+
 }
