@@ -1,0 +1,10 @@
+{"references": [{
+    "fields": {
+        "author": "Victor Bankowski",
+        "publisher": "Unknownpotato publishing",
+        "title": "a Dive into the Rust Programming Language",
+        "year": "2051"
+    },
+    "name": "Bankowski2051",
+    "type": "BOOK"
+}]}
