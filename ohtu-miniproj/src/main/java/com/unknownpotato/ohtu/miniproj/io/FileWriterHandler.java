@@ -41,10 +41,10 @@ public class FileWriterHandler {
      * @throws IOException 
      */
     public void writeTo(String toWrite) throws IOException {
-        FileWriter writer = new FileWriter(file, true);
-        writer.write(toWrite);
-        writer.write('\n');
-        writer.close();
+        try (FileWriter writer = new FileWriter(file, true)) {
+            writer.write(toWrite);
+            writer.write('\n');
+        }
     }
 
     /**

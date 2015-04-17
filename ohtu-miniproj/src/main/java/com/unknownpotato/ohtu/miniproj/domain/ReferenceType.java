@@ -16,7 +16,7 @@ public enum ReferenceType {
     ARTICLE(new String[]{"author", "title", "journal", "year", "volume"}, 
             new String[]{"number", "pages", "month", "note", "key"}),
     BOOKLET(new String[]{"title"}, 
-            new String[]{"author", "howpublished", "howpublished", "address", "month", "year", "note", "key"}),
+            new String[]{"author", "howpublished", "address", "month", "year", "note", "key"}),
     INSTITUTION(new String[]{"title"}, 
             new String[]{"author", "howpublished"}),
     CONFERENCE(new String[]{"author", "title", "booktitle"}, 

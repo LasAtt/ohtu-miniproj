@@ -8,7 +8,7 @@ description 'User can add a new reference to the program'
 scenario "user can add a correctly formatted book type reference", {
     given 'reference add attempt', {
         references = new References()
-        io = new StubIO("1", "1", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "4")
+        io = new StubIO("1", "1", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "5")
         ui = new TextUI(references, io)
     }
 
