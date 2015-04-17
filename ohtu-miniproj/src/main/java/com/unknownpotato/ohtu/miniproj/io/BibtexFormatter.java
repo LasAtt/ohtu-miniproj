@@ -11,23 +11,15 @@ import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
 public class BibtexFormatter {
 
 	public static String convertReference(Reference ref) {
-		BibtexFormatter formatter = new BibtexFormatter();
 		ReferenceType type = ref.getType();
-
-		switch (type) {
-		case BOOK:
-			return formatter.formatBook(ref);
-
-		}
-
-		return null;
-	}
-
-	private String formatBook(Reference ref) {
+		
 		StringBuilder builder = new StringBuilder();
-		builder.append("@Book{");
+		builder.append("@");
+		builder.append(type);
+		builder.append("{");
 		builder.append(ref.getName());
 		builder.append(",\n");
+		
 		String value = "";
 		for (String field : ref.getFieldKeys()) {
 			value = ref.getField(field);

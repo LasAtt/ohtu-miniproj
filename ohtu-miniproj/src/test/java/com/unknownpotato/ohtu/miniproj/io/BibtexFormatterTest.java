@@ -35,7 +35,7 @@ public class BibtexFormatterTest {
 
     @Test
     public void outputIsCorrectTest() {
-        String formatted = BibtexFormatter.convertReference(ref);
+    	String formatted = BibtexFormatter.convertReference(ref);
         Scanner scanner = new Scanner(formatted);
 
         assertEquals("@Book{Bankowski2051,", scanner.nextLine());

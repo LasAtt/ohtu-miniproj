@@ -142,12 +142,12 @@ public class TextUI {
             io.println("No references found!");
         } else {
             try {
-                FileWriterHandler writer = new FileWriterHandler("BibTex_export.bib");
+                FileWriterHandler writer = new FileWriterHandler("BibTex_export.txt");
+                
                 for (Reference reference : references.getReferences()) {
-                    if (reference.getType() == ReferenceType.BOOK) {
-                        writer.writeTo(BibtexFormatter.convertReference(reference));
-                    }
+                	writer.writeTo(BibtexFormatter.convertReference(reference));
                 }
+                
             } catch (IOException ex) {
                 Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
                 io.println("Export failed!");
