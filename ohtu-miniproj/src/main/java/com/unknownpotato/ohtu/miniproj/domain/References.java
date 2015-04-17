@@ -27,19 +27,16 @@ public class References {
     
     public void deleteReference(String name){
         for (int i = 0; i < refs.size(); i++) {
-            if(refs.get(0).getName().equals(name)){
+            if(refs.get(i).getName().equals(name)){
                 refs.remove(i);
             }
         }
     }
     
     public Reference getReference(String name){
-        for (Reference ref : refs) {
-            if(ref.getName().equals(name)){
-                return ref;
-            }
-        }
-        return null;
+        return refs.stream().filter(s -> s.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
     
     public List<Reference> getReferences() {
