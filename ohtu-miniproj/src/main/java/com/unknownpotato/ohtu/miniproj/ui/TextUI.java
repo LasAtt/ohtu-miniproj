@@ -13,10 +13,12 @@ import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
 import com.unknownpotato.ohtu.miniproj.io.IO;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -188,5 +190,11 @@ public class TextUI {
             io.println("Reference " + name + " was not found!");
         }
         references.deleteReference(name);
+    }
+
+    public List<Reference> filterByTag(List<Reference> refs, String tag) {
+        return refs.stream()
+                .filter(s -> s.getTags().contains(tag))
+                .collect(Collectors.toList());
     }
 }
