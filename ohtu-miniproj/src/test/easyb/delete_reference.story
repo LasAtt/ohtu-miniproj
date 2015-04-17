@@ -3,7 +3,7 @@ import com.unknownpotato.ohtu.miniproj.domain.*
 import com.unknownpotato.ohtu.miniproj.io.*
 import com.unknownpotato.ohtu.miniproj.ui.*
 
-description 'User can add a new reference to the program'
+description 'User can delete a reference from the program'
 
 scenario "user can delete an existing reference", {
     given 'reference delete attempt', {
