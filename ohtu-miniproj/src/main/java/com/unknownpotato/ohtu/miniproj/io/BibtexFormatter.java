@@ -10,37 +10,16 @@ import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
  */
 public class BibtexFormatter {
 
-	public static String convertReference(Reference ref) throws Exception {
-		BibtexFormatter formatter = new BibtexFormatter();
+	public static String convertReference(Reference ref) {
 		ReferenceType type = ref.getType();
-
-		switch (type) {
-		case BOOK:
-			return formatter.formatBook(ref);
-		case ARTICLE:
-			return formatter.formatArticle(ref);
-		}
-
-		throw new Exception("Reference could not be formatted because the reference type is not supported");
-	}
-
-	private String formatArticle(Reference ref) {
+		
 		StringBuilder builder = new StringBuilder();
-		builder.append("@Article{");
+		builder.append("@");
+		builder.append(type);
+		builder.append("{");
 		builder.append(ref.getName());
 		builder.append(",\n");
-		return writeFields(ref, builder).toString();
-	}
-
-	private String formatBook(Reference ref) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("@Book{");
-		builder.append(ref.getName());
-		builder.append(",\n");
-		return writeFields(ref, builder).toString();
-	}
-
-	private StringBuilder writeFields(Reference ref, StringBuilder builder) {
+		
 		String value = "";
 		for (String field : ref.getFieldKeys()) {
 			value = ref.getField(field);
@@ -52,6 +31,6 @@ public class BibtexFormatter {
 			}
 		}
 		builder.append("}\n");
-		return builder;
+		return builder.toString();
 	}
 }

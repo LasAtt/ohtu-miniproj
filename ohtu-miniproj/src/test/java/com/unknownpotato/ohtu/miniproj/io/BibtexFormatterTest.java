@@ -35,12 +35,7 @@ public class BibtexFormatterTest {
 
     @Test
     public void outputIsCorrectTest() {
-    	String formatted = "";
-    	try{
-    		formatted = BibtexFormatter.convertReference(ref);
-    	} catch (Exception e) {
-    		fail("convertReference threw an exception: " + e);
-    	}
+    	String formatted = BibtexFormatter.convertReference(ref);
         Scanner scanner = new Scanner(formatted);
 
         assertEquals("@Book{Bankowski2051,", scanner.nextLine());

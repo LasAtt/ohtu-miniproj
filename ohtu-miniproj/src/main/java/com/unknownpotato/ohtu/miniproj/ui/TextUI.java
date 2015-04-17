@@ -143,18 +143,11 @@ public class TextUI {
         } else {
             try {
                 FileWriterHandler writer = new FileWriterHandler("BibTex_export.txt");
-                String bibtex;
+                
                 for (Reference reference : references.getReferences()) {
-                	try{
-                		bibtex = BibtexFormatter.convertReference(reference);
-                	} catch (Exception e){
-                		System.out.println("Could not convert reference: "+ e);
-                		continue;
-                	}
-                	
-                	writer.writeTo(bibtex);
-
+                	writer.writeTo(BibtexFormatter.convertReference(reference));
                 }
+                
             } catch (IOException ex) {
                 Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
                 io.println("Export failed!");
