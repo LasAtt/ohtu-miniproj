@@ -28,7 +28,7 @@ public class JSONWriter {
             for (Reference r : ref.getReferences()) {
                 JSONObject rjo = new JSONObject();
                 rjo.put("name", r.getName());
-                rjo.put("type", r.getType().toString());
+                rjo.put("type", r.getType().name());
                 rjo.put("fields", r.getFields());
                 ja.put(rjo);
             }
