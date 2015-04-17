@@ -33,12 +33,12 @@ public class References {
         }
     }
     
-    public Reference getReference(String name){
+    public Reference getReference(String name) {
         return refs.stream().filter(s -> s.getName().equals(name))
                 .findFirst()
                 .orElse(null);
     }
-    
+
     public List<Reference> getReferences() {
         return refs;
     }

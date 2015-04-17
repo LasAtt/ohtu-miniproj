@@ -3,6 +3,7 @@ package com.unknownpotato.ohtu.miniproj.domain;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Reference class that includes the type of reference and all necessary fields.
@@ -12,13 +13,13 @@ public class Reference {
     private Map<String, String> fields;
     private ReferenceType type;
     private String name;
+    private Set<String> tags;
 
     private Reference(ReferenceType type, String name) {
-        
         this.name = name;
         this.type = type;
         this.fields = new HashMap();
-
+        this.tags = new TreeSet<>();
     }
 
     private static String generateReferenceName(String name, Map<String, String> fields) {
@@ -45,6 +46,18 @@ public class Reference {
             }
         }
         return ref;
+    }
+    
+    public void addTag(String tag) {
+        tags.add(tag);
+    }
+    
+    public void removeTag(String tag) {
+        tags.remove(tag);
+    }
+
+    public Set<String> getTags() {
+        return tags;
     }
 
     protected void addField(String key, String value) {
