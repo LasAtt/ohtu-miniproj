@@ -32,21 +32,38 @@ public class BibtexFormatterTest {
         fields.put("year", "2051");
         ref = Reference.createReference(ReferenceType.BOOK, "Bankowski2051", fields);
     }
+    
+    private Set<String> createCompareSet(ReferenceType type) {
+		Set<String> lines = new HashSet<String>();
+		
+		switch(type){
+			case BOOK:
+				lines.add("year = \"2051\",");
+		        lines.add("publisher = \"Unknownpotato publishing\",");
+		        lines.add("author = \"Victor Bankowski\",");
+		        lines.add("title = \"a Dive into the Rust Programming Language\",");
+		        break;
+			case ARTICLE:
+				break;
+		}
+
+        
+		return lines;
+	}
 
     @Test
-    public void outputIsCorrectTest() {
+    public void bookReferenceOutputIsCorrectTest() {
     	String formatted = BibtexFormatter.convertReference(ref);
         Scanner scanner = new Scanner(formatted);
 
         assertEquals("@Book{Bankowski2051,", scanner.nextLine());
-        Set<String> lines = new HashSet<String>();
+        Set<String> lines = createCompareSet(ref.getType());
 
-        lines.add("year = \"2051\",");
-        lines.add("publisher = \"Unknownpotato publishing\",");
-        lines.add("author = \"Victor Bankowski\",");
-        lines.add("title = \"a Dive into the Rust Programming Language\",");
+        analyzeLines(scanner, lines);
+    }
 
-        while (scanner.hasNextLine()) {
+	private void analyzeLines(Scanner scanner, Set<String> lines) {
+		while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             if (lines.isEmpty()) {
                 assertEquals("}", line);
@@ -60,6 +77,19 @@ public class BibtexFormatterTest {
         }
 
         fail("Too few lines");
+	}
+
+	
+    
+    @Test
+    public void articleReferenceOutputIsCorrectTest() {
+    	String formatted = BibtexFormatter.convertReference(ref);
+        Scanner scanner = new Scanner(formatted);
+
+        assertEquals("@Article{Bankowski2051,", scanner.nextLine());
+        Set<String> lines = createCompareSet(ref.getType());
+
+        analyzeLines(scanner, lines);
     }
 
 }
