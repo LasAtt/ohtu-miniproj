@@ -185,7 +185,7 @@ public class TextUI {
     private void askForFields(List<String> fieldKeys, Map<String, String> fields, boolean canLeaveEmpty) {
         fieldKeys.stream().forEach(f -> {
             String value = io.readLine(" " + f + ":");
-            while ((canLeaveEmpty && value.isEmpty())
+            while ((!canLeaveEmpty && value.isEmpty())
                     || (f.equals("year") && (!StringUtils.isNumeric(value) || value.length() < 2))) {
                 value = io.readLine(" " + f + ":");
             }
