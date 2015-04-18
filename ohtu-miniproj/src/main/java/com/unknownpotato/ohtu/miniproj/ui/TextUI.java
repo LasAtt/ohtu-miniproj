@@ -71,51 +71,23 @@ public class TextUI {
     public void addReference() {
         int typeChoice = 0;
         while (typeChoice < 1 || typeChoice > 10) {
-            typeChoice = io.readInt("Type (1=book, 2=article, 3=inproceedings, 4=booklet, "
-                    + "\n5=institution, 6=conference, 7=inbook, 8=incollection, 9=manual, 10=quit):\n");
+            try {
+                typeChoice = io.readInt("Type (1=book, 2=article, 3=inproceedings, 4=booklet, "
+                        + "\n5=institution, 6=conference, 7=inbook, 8=incollection, 9=manual, 10=quit):\n");
+            } catch (Exception ex) {
+            }
         }
 
-        ReferenceType type = null;
+        int i = 1;
 
-        switch (typeChoice) {
-            case 1:
-                type = ReferenceType.BOOK;
+        for (ReferenceType type : ReferenceType.values()) {
+            if (typeChoice == i && typeChoice != 10) {
                 askForFields(type);
+            }
+            if (typeChoice == 10) {
                 break;
-            case 2:
-                type = ReferenceType.ARTICLE;
-                askForFields(type);
-                break;
-            case 3:
-                type = ReferenceType.INPROCEEDINGS;
-                askForFields(type);
-                break;
-            case 4:
-                type = ReferenceType.BOOKLET;
-                askForFields(type);
-                break;
-            case 5:
-                type = ReferenceType.INSTITUTION;
-                askForFields(type);
-                break;
-            case 6:
-                type = ReferenceType.CONFERENCE;
-                askForFields(type);
-                break;
-            case 7:
-                type = ReferenceType.INBOOK;
-                askForFields(type);
-                break;
-            case 8:
-                type = ReferenceType.INCOLLECTION;
-                askForFields(type);
-                break;
-            case 9:
-                type = ReferenceType.MANUAL;
-                askForFields(type);
-                break;
-            case 10:
-                break;
+            }
+            i++;
         }
     }
 
@@ -128,6 +100,7 @@ public class TextUI {
             for (Reference reference : references.getReferences()) {
                 referenceFields = reference.getFieldKeys();
                 io.print("- ");
+                io.print("name: " + reference.getName() + " ");
                 for (String field : referenceFields) {
                     io.print(field + ": " + reference.getField(field) + " ");
                 }
@@ -136,12 +109,22 @@ public class TextUI {
         }
     }
 
+    public void deleteReference() {
+        String name = io.readLine("Name the reference to be deleted:\n");
+        if (!references.getReferences().contains(references.getReference(name))) {
+            io.println("Reference " + name + " was not found!");
+        } else {
+            references.deleteReference(name);
+            io.println("Reference " + name + " was deleted!");
+        }
+    }
+
     public void exportToBibTex() {
         if (references.getReferences().isEmpty()) {
             io.println("No references found!");
         } else {
             try {
-                FileWriterHandler writer = new FileWriterHandler("BibTex_export.txt");
+                FileWriterHandler writer = new FileWriterHandler("BibTex_export.bib");
 
                 for (Reference reference : references.getReferences()) {
                     writer.writeTo(BibtexFormatter.convertReference(reference));
@@ -152,44 +135,29 @@ public class TextUI {
                 io.println("Export failed!");
                 return;
             }
-            io.println("Export complete! (currently only book type references are exported)");
+            io.println("Export complete!");
         }
     }
 
     public void askForFields(ReferenceType type) {
-        Map<String, String> fields = new HashMap<>();
-
+        Map<String, String> fields = new HashMap<String, String>();
         for (String field : type.getRequiredFields()) {
             String fieldContent = io.readLine(field + ":\n");
             while (field.equals("year") && fieldContent.length() < 2) {
                 fieldContent = io.readLine(field + ":\n");
             }
             fields.put(field, fieldContent);
+
         }
 
         for (String field : type.getOptionalFields()) {
             String fieldContent = io.readLine(field + ":\n");
             fields.put(field, fieldContent);
         }
-//        String author = io.readLine("Author:\n");
-//        String title = io.readLine("Title:\n");
-//        String publisher = io.readLine("Publisher:\n");
-//        String year = io.readLine("Year:\n");
-//        fields.put("author", author);
-//        fields.put("title", title);
-//        fields.put("publisher", publisher);
-//        fields.put("year", year);
+
         Reference ref = Reference.createReference(type, "", fields);
         references.addReference(ref);
         io.println("You have added a new reference!");
-    }
-
-    public void deleteReference() {
-        String name = io.readLine("Name the reference to be deleted:\n");
-        if (!references.getReferences().contains(references.getReference(name))) {
-            io.println("Reference " + name + " was not found!");
-        }
-        references.deleteReference(name);
     }
 
     public List<Reference> filterByTag(List<Reference> refs, String tag) {
