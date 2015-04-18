@@ -42,7 +42,7 @@ public class TextUI {
     public void run() {
         Map<String, Runnable> choices = setUpChoices();
         while (true) {
-            io.println("[A]dd new reference, [L]ist all references, [D]elete a reference, e[X]port to BibTeX, [Q]uit");
+            io.println("[A]dd new reference, [L]ist all references, [E]dit a reference, [D]elete a reference, e[X]port to BibTeX, [Q]uit");
             String choice = io.readCharacter(":");
             choice = choice.toLowerCase();
 
@@ -126,6 +126,27 @@ public class TextUI {
             io.println("Reference " + name + " was deleted!");
         }
     }
+    
+    public void editReference() {
+        boolean fieldWasFound = false;
+        String name = io.readLine("Name the reference to be edited:\n");
+        if (!references.getReferences().contains(references.getReference(name))) {
+            io.println("Reference " + name + " was not found!");
+        } else {
+            String fieldToEdit = io.readLine("Name the field to be edited:\n");
+            for (String field : references.getReference(name).getFieldKeys()) {
+                if (field.equals(fieldToEdit)) {
+                    fieldWasFound = true;
+                    String newFieldContent = io.readLine("Name the new content for this field:\n");
+                    references.getReference(name).editField(field, newFieldContent);
+                    io.println("The field " + fieldToEdit + " was edited!");
+                }
+            }
+            if (fieldWasFound == false) {
+                io.println("The field " + fieldToEdit + " was not found!");
+            }
+        }
+    }
 
     public void exportToBibTex() {
         if (references.getReferences().isEmpty()) {
@@ -189,6 +210,7 @@ public class TextUI {
         Map<String, Runnable> choices = new HashMap<>();
         choices.put("a", () -> addReference());
         choices.put("l", () -> listReferences());
+        choices.put("e", () -> editReference());
         choices.put("d", () -> deleteReference());
         choices.put("x", () -> exportToBibTex());
         return choices;
