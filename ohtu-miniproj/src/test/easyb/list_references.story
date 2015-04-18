@@ -5,10 +5,10 @@ import com.unknownpotato.ohtu.miniproj.ui.*
 
 description 'User can list the references stored in the program'
 
-scenario "user can list all added book type references if there are no such references", {
+scenario "user can't list all added book type references if there are no such references", {
     given 'reference listing attempt', {
        references = new References()
-       io = new StubIO("2", "5")
+       io = new StubIO("list", "qquit")
        ui = new TextUI(references, io)
     }
 
@@ -24,7 +24,7 @@ scenario "user can list all added book type references if there are no such refe
 scenario "user can list all added book type references if there are such references", {
     given 'reference listing attempt', {
        references = new References()
-       io = new StubIO("1", "1", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "2", "5")
+       io = new StubIO("add", "0", "author", "title", "1999", "publisher", "no", "list", "quit")
        ui = new TextUI(references, io)
     }
 

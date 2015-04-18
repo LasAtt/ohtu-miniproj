@@ -48,17 +48,16 @@ public class StubIO implements IO {
 
     @Override
     public void print(String toPrint) {
-        System.out.print(toPrint);
         prints.add(toPrint);
     }
 
     @Override
     public void println() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
     public String readCharacter(String prompt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return lines[i++].substring(0, 1);
     }
 }

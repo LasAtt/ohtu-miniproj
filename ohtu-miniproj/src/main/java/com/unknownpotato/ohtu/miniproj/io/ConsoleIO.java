@@ -25,28 +25,22 @@ public class ConsoleIO implements IO {
     @Override
     public String readLine(String prompt) {
         Scanner scanner = new Scanner(in);
-        printPrompt(prompt);
+        print(prompt + " ");
         return scanner.nextLine();
     }
 
     @Override
     public int readInt(String prompt) {
         Scanner scanner = new Scanner(in);
-        printPrompt(prompt);
+        print(prompt + " ");
         return Integer.parseInt(scanner.nextLine());
     }
 
     @Override
     public String readCharacter(String prompt) {
         Scanner scanner = new Scanner(in);
-        printPrompt(prompt);
+        print(prompt + " ");
         return scanner.next().substring(0, 1);
-    }
-
-    private void printPrompt(String prompt) {
-        String print = prompt + " ";
-        out.print(print);
-        prints.add(print);
     }
 
     @Override

@@ -40,56 +40,51 @@ public class TextUI {
     }
 
     public void run() {
-        int choice = 0;
-        outerloop:
+        Map<String, Runnable> choices = setUpChoices();
         while (true) {
-            try {
-                choice = io.readInt("Type 1 to add a new reference, 2 to list all references, 3 to delete a reference, 4 to export to BibTex or 5 to quit\n");
-            } catch (Exception ex) {
+            io.println("[A]dd new reference, [L]ist all references, [D]elete a reference, e[X]port to BibTeX, [Q]uit");
+            String choice = io.readCharacter(":");
+            choice = choice.toLowerCase();
+
+            if (choice.equals("q")) {
+                return;
+            }
+
+            if (!choices.containsKey(choice)) {
                 continue;
             }
-            switch (choice) {
-                case 1:
-                    addReference();
-                    continue;
-                case 2:
-                    listReferences();
-                    continue;
-                case 3:
-                    deleteReference();
-                    continue;
-                case 4:
-                    exportToBibTex();
-                    continue;
-                case 5:
-                    break outerloop;
-                default:
-                    break;
-            }
+
+            choices.get(choice).run();
         }
     }
 
     public void addReference() {
-        whileloop:
         while (true) {
-            listTypeChoices();
-            String choice = io.readCharacter(": ");
+            io.println(listTypeChoices());
+            String choice = io.readCharacter(":");
             if (!StringUtils.isNumeric(choice)) {
                 switch (choice) {
-                    case ("h"):
-                        continue;
                     case ("q"):
                         return;
+                    default:
+                        io.println("Invalid choice");
+                    case ("h"):
+                        continue;    
                 }
             }
-            
-            askForFields(ReferenceType.values()[Integer.parseInt(choice)]);
+            int i = Integer.parseInt(choice);
+            if (i < 0 || i >= ReferenceType.values().length) {
+                io.println("Invalid choice");
+            }
+                
+            createNewReference(ReferenceType.values()[i]);
             io.println("You have added a new reference!");
+
             return;
         }
     }
 
-    private void listTypeChoices() {
+    private String listTypeChoices() {
         final StringBuilder sb = new StringBuilder();
         sb.append("Give reference type (");
         int i[] = {0};
@@ -97,7 +92,7 @@ public class TextUI {
             sb.append(i[0]++).append("=").append(t.name().toLowerCase()).append(", ");
         });
         sb.append("h=help, q=quit)");
-        io.println(sb.toString());
+        return sb.toString();
     }
 
     private void listReferences() {
@@ -106,19 +101,20 @@ public class TextUI {
             return;
         }
         references.getReferences().stream().forEach(r -> {
+            io.println("All references:");
             io.println(referenceToString(r));
         });
     }
 
     public String referenceToString(Reference r) {
         StringBuilder sb = new StringBuilder();
-        sb.append("- name: ").append(r.getName()).append(" ");
+        sb.append(" - ").append(r.getName()).append(": { ");
         r.getFieldKeys().stream()
                 .forEach(f -> sb.append(f)
                         .append(": ")
                         .append(r.getField(f))
                         .append(" "));
-        return sb.toString();
+        return sb.append(" }").toString();
     }
 
     public void deleteReference() {
@@ -134,41 +130,53 @@ public class TextUI {
     public void exportToBibTex() {
         if (references.getReferences().isEmpty()) {
             io.println("No references found!");
-        } else {
-            try {
-                FileWriterHandler writer = new FileWriterHandler("BibTex_export.bib");
-
-                for (Reference reference : references.getReferences()) {
-                    writer.writeTo(BibtexFormatter.convertReference(reference));
-                }
-
-            } catch (IOException ex) {
-                Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
-                io.println("Export failed!");
-                return;
-            }
-            io.println("Export complete!");
+            return;
         }
+
+        try {
+            FileWriterHandler writer = new FileWriterHandler("BibTex_export.bib");
+            writer.writeTo(references.getReferences().stream()
+                    .map(r -> BibtexFormatter.convertReference(r))
+                    .collect(Collectors.toList()));
+        } catch (IOException ex) {
+            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+            io.println("Export failed!");
+            return;
+        }
+        io.println("Export complete!");
     }
 
-    public void askForFields(ReferenceType type) {
+    public void createNewReference(ReferenceType type) {
         Map<String, String> fields = new HashMap<>();
-        for (String field : type.getRequiredFields()) {
-            String fieldContent = io.readLine(field + ":\n");
-            while (field.equals("year") && fieldContent.length() < 2) {
-                fieldContent = io.readLine(field + ":\n");
-            }
-            fields.put(field, fieldContent);
 
-        }
+        io.println("Fill required fields");
+        askForFields(Arrays.asList(type.getRequiredFields()), fields, false);
 
-        for (String field : type.getOptionalFields()) {
-            String fieldContent = io.readLine(field + ":\n");
-            fields.put(field, fieldContent);
+        if (getPermission("Fill optional fields? ([Y]es/[N]o):")) {
+            io.println("Fill optional fields, press enter to leave field empty.");
+            askForFields(Arrays.asList(type.getOptionalFields()), fields, true);
         }
 
         Reference ref = Reference.createReference(type, "", fields);
         references.addReference(ref);
+    }
+
+    private void askForFields(List<String> fieldKeys, Map<String, String> fields, boolean canLeaveEmpty) {
+        fieldKeys.stream().forEach(f -> {
+            String value = io.readLine(" " + f + ":");
+            while ((canLeaveEmpty && value.isEmpty())
+                    || (f.equals("year") && (!StringUtils.isNumeric(value) || value.length() < 2))) {
+                value = io.readLine(" " + f + ":");
+            }
+            if (!value.isEmpty()) {
+                fields.put(f, value);
+            }
+        });
+    }
+
+    private boolean getPermission(String prompt) {
+        String choice = io.readCharacter(prompt);
+        return choice.toLowerCase().trim().equals("y");
     }
 
     public List<Reference> filterByTag(List<Reference> refs, String tag) {
@@ -176,4 +184,14 @@ public class TextUI {
                 .filter(s -> s.getTags().contains(tag))
                 .collect(Collectors.toList());
     }
+
+    private Map<String, Runnable> setUpChoices() {
+        Map<String, Runnable> choices = new HashMap<>();
+        choices.put("a", () -> addReference());
+        choices.put("l", () -> listReferences());
+        choices.put("d", () -> deleteReference());
+        choices.put("x", () -> exportToBibTex());
+        return choices;
+    }
+
 }

@@ -9,7 +9,7 @@ scenario "user can add a correctly formatted book type reference", {
     given 'reference add attempt', {
         references = new References()
         
-        io = new StubIO("1", "0", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "5")
+        io = new StubIO("a", "0", "author", "title", "1999", "publisher", "n", "q")
         ui = new TextUI(references, io)
     }
 

@@ -5,10 +5,10 @@ import com.unknownpotato.ohtu.miniproj.ui.*
 
 description 'User can export the references to a BibTex file'
 
-scenario "user can attempt to export when there are no references", {
+scenario "user can't export when there are no references", {
     given 'reference export attempt', {
        references = new References()
-       io = new StubIO("4", "5")
+       io = new StubIO("xport", "quit")
        ui = new TextUI(references, io)
     }
 
@@ -24,7 +24,7 @@ scenario "user can attempt to export when there are no references", {
 scenario "user can export the references to a BibTex file", {
     given 'export attempt', {
        references = new References()
-       io = new StubIO("1", "1", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "4", "5")
+       io = new StubIO("add", "0", "test", "title", "author", "1999", "publisher", "no", "xport", "quit")
        ui = new TextUI(references, io)
     }
 
