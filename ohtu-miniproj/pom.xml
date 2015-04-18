@@ -75,16 +75,10 @@
             <artifactId>commons-lang</artifactId>
             <version>2.1</version>
         </dependency>
-        
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20090211</version>
+            <version>3.0.22</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
@@ -135,6 +129,23 @@
                     </instrumentation>
                 </configuration>
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.unknownpotato.ohtu.miniproj.App</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.easyb</groupId>
@@ -154,6 +165,7 @@
                     </storyReport>
                 </configuration>
             </plugin>
+            
         </plugins>
     </build>
 </project>

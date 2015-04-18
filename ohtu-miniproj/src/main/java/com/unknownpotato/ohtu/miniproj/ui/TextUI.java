@@ -12,13 +12,14 @@ import com.unknownpotato.ohtu.miniproj.io.BibtexFormatter;
 import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
 import com.unknownpotato.ohtu.miniproj.io.IO;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -69,44 +70,55 @@ public class TextUI {
     }
 
     public void addReference() {
-        int typeChoice = 0;
-        while (typeChoice < 1 || typeChoice > 10) {
-            try {
-                typeChoice = io.readInt("Type (1=book, 2=article, 3=inproceedings, 4=booklet, "
-                        + "\n5=institution, 6=conference, 7=inbook, 8=incollection, 9=manual, 10=quit):\n");
-            } catch (Exception ex) {
+        whileloop:
+        while (true) {
+            listTypeChoices();
+            String choice = io.readCharacter(": ");
+            if (!StringUtils.isNumeric(choice)) {
+                switch (choice) {
+                    case ("h"):
+                        continue;
+                    case ("q"):
+                        return;
+                }
             }
-        }
-
-        int i = 1;
-
-        for (ReferenceType type : ReferenceType.values()) {
-            if (typeChoice == i && typeChoice != 10) {
-                askForFields(type);
-            }
-            if (typeChoice == 10) {
-                break;
-            }
-            i++;
+            
+            askForFields(ReferenceType.values()[Integer.parseInt(choice)]);
+            io.println("You have added a new reference!");
+            return;
         }
     }
 
-    public void listReferences() {
-        Set<String> referenceFields = null;
+    private void listTypeChoices() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Give reference type (");
+        int i[] = {0};
+        Arrays.asList(ReferenceType.values()).stream().forEach(t -> {
+            sb.append(i[0]++).append("=").append(t.name().toLowerCase()).append(", ");
+        });
+        sb.append("h=help, q=quit)");
+        io.println(sb.toString());
+    }
+
+    private void listReferences() {
         if (references.getReferences().isEmpty()) {
             io.println("No references found!");
-        } else {
-            io.println("All references:");
-            for (Reference reference : references.getReferences()) {
-                referenceFields = reference.getFieldKeys();
-                io.print("- ");
-                io.print("name: " + reference.getName() + " ");
-                for (String field : referenceFields) {
-                    io.print(field + ": " + reference.getField(field) + " ");
-                }
-                io.println("");
-            }
+            return;
         }
+        references.getReferences().stream().forEach(r -> {
+            io.println(referenceToString(r));
+        });
+    }
+
+    public String referenceToString(Reference r) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("- name: ").append(r.getName()).append(" ");
+        r.getFieldKeys().stream()
+                .forEach(f -> sb.append(f)
+                        .append(": ")
+                        .append(r.getField(f))
+                        .append(" "));
+        return sb.toString();
     }
 
     public void deleteReference() {
@@ -140,7 +152,7 @@ public class TextUI {
     }
 
     public void askForFields(ReferenceType type) {
-        Map<String, String> fields = new HashMap<String, String>();
+        Map<String, String> fields = new HashMap<>();
         for (String field : type.getRequiredFields()) {
             String fieldContent = io.readLine(field + ":\n");
             while (field.equals("year") && fieldContent.length() < 2) {
@@ -157,7 +169,6 @@ public class TextUI {
 
         Reference ref = Reference.createReference(type, "", fields);
         references.addReference(ref);
-        io.println("You have added a new reference!");
     }
 
     public List<Reference> filterByTag(List<Reference> refs, String tag) {
