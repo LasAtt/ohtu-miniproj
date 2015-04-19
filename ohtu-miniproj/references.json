@@ -1,0 +1,23 @@
+{"references": [
+    {
+        "fields": {
+            "author": "asd",
+            "publisher": "sdf",
+            "title": "er",
+            "year": "343"
+        },
+        "name": "asd3",
+        "type": "BOOK"
+    },
+    {
+        "fields": {
+            "author": "sda",
+            "journal": "rt",
+            "title": "gfh",
+            "volume": "r",
+            "year": "34324"
+        },
+        "name": "sda324",
+        "type": "ARTICLE"
+    }
+]}

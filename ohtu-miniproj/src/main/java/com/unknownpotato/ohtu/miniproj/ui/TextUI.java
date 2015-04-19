@@ -11,6 +11,8 @@ import com.unknownpotato.ohtu.miniproj.domain.References;
 import com.unknownpotato.ohtu.miniproj.io.BibtexFormatter;
 import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
 import com.unknownpotato.ohtu.miniproj.io.IO;
+import com.unknownpotato.ohtu.miniproj.io.JSONReader;
+import com.unknownpotato.ohtu.miniproj.io.JSONWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +34,7 @@ public class TextUI {
 
     private IO io;
     private References references;
+    private final String DEFAULT_FILENAME = "references.json";
 
     @Autowired
     public TextUI(References references, IO io) {
@@ -42,7 +45,14 @@ public class TextUI {
     public void run() {
         Map<String, Runnable> choices = setUpChoices();
         while (true) {
-            io.println("[A]dd new reference, [L]ist all references, [E]dit a reference, [D]elete a reference, e[X]port to BibTeX, [Q]uit");
+            io.println("[A]dd new reference\n"
+                    + "[L]ist all references\n"
+                    + "[E]dit a reference\n"
+                    + "[D]elete a reference\n"
+                    + "e[X]port to BibTeX\n"
+                    + "[S]ave references JSON file\n"
+                    + "[O]pen references JSON file\n"
+                    + "[Q]uit");
             String choice = io.readCharacter(":");
             choice = choice.toLowerCase();
 
@@ -205,6 +215,24 @@ public class TextUI {
                 .filter(s -> s.getTags().contains(tag))
                 .collect(Collectors.toList());
     }
+    
+    public void loadReferences() {
+        String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
+        if (filename.isEmpty()) {
+            filename = DEFAULT_FILENAME;
+        }
+        references = JSONReader.loadReferences(filename);
+        io.println("References loaded successfully!");
+    }
+    
+    public void saveReferences() {
+        String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
+        if (filename.isEmpty()) {
+            filename = DEFAULT_FILENAME;
+        }
+        JSONWriter.saveReferences(references, filename);
+        io.println("References saved successfully!");
+    }
 
     private Map<String, Runnable> setUpChoices() {
         Map<String, Runnable> choices = new HashMap<>();
@@ -213,6 +241,8 @@ public class TextUI {
         choices.put("e", () -> editReference());
         choices.put("d", () -> deleteReference());
         choices.put("x", () -> exportToBibTex());
+        choices.put("s", () -> saveReferences());
+        choices.put("o", () -> loadReferences());
         return choices;
     }
 
