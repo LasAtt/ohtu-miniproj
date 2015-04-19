@@ -226,6 +226,10 @@ public class TextUI {
     }
     
     public void saveReferences() {
+        if (references.getReferences().isEmpty()) {
+            io.println("No references found!");
+            return;
+        }
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;

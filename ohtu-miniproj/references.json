@@ -1,23 +1,10 @@
-{"references": [
-    {
-        "fields": {
-            "author": "asd",
-            "publisher": "sdf",
-            "title": "er",
-            "year": "343"
-        },
-        "name": "asd3",
-        "type": "BOOK"
+{"references": [{
+    "fields": {
+        "author": "test testitys",
+        "publisher": "publisher",
+        "title": "title",
+        "year": "1999"
     },
-    {
-        "fields": {
-            "author": "sda",
-            "journal": "rt",
-            "title": "gfh",
-            "volume": "r",
-            "year": "34324"
-        },
-        "name": "sda324",
-        "type": "ARTICLE"
-    }
-]}
+    "name": "testitys99",
+    "type": "BOOK"
+}]}
