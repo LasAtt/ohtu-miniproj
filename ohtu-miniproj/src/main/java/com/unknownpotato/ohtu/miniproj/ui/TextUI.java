@@ -79,14 +79,14 @@ public class TextUI {
                     default:
                         io.println("Invalid choice");
                     case ("h"):
-                        continue;    
+                        continue;
                 }
             }
             int i = Integer.parseInt(choice);
             if (i < 0 || i >= ReferenceType.values().length) {
                 io.println("Invalid choice");
             }
-                
+
             createNewReference(ReferenceType.values()[i]);
             io.println("You have added a new reference!");
 
@@ -136,7 +136,7 @@ public class TextUI {
             io.println("Reference " + name + " was deleted!");
         }
     }
-    
+
     public void editReference() {
         boolean fieldWasFound = false;
         String name = io.readLine("Name the reference to be edited:\n");
@@ -215,16 +215,20 @@ public class TextUI {
                 .filter(s -> s.getTags().contains(tag))
                 .collect(Collectors.toList());
     }
-    
+
     public void loadReferences() {
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
         }
         references = JSONReader.loadReferences(filename);
-        io.println("References loaded successfully!");
+        if (references.getReferences().isEmpty()) {
+            io.println("No references loaded!");
+        } else {
+            io.println("References loaded successfully!");
+        }
     }
-    
+
     public void saveReferences() {
         if (references.getReferences().isEmpty()) {
             io.println("No references found!");
