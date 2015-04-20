@@ -42,8 +42,9 @@ public class TextUI {
     private final String DEFAULT_FILENAME = "references.json";
 
     /**
-     * 
-     * @param references References -class that references created are stored in.
+     *
+     * @param references References -class that references created are stored
+     * in.
      * @param io Input and output class.
      */
     @Autowired
@@ -82,7 +83,8 @@ public class TextUI {
     }
 
     /**
-     * Reads reference information from the user using IO and adds a new reference to IO.
+     * Reads reference information from the user using IO and adds a new
+     * reference to IO.
      */
     private void addReference() {
         while (true) {
@@ -111,6 +113,7 @@ public class TextUI {
 
     /**
      * Lists all choices on creating a new Reference.
+     *
      * @return choices as string.
      */
     private String listReferenceCreationChoices() {
@@ -140,6 +143,7 @@ public class TextUI {
 
     /**
      * Reads Reference information to String and returns it.
+     *
      * @param r reference to be converted
      * @return reference given as String representation.
      */
@@ -166,16 +170,15 @@ public class TextUI {
             io.println("Reference " + name + " was deleted!");
         }
     }
-<<<<<<< HEAD
-    
-    /**
-     * Edits a field in References.
-     */
+    <<<<<<< HEAD /**
+             * Edits a field in References.
+             */
+
     private void editReference() {
-=======
+         == == == =
 
     public void editReference() {
->>>>>>> 42a8d5c3a3f6ba749d4b75ca57c1dd92413a8980
+         >>> >>> > 42a8d5c3a3f6ba749d4b75ca57c1dd92413a8980
         boolean fieldWasFound = false;
         String name = io.readLine("Name the reference to be edited:\n");
         if (!references.getReferences().contains(references.getReference(name))) {
@@ -220,6 +223,7 @@ public class TextUI {
 
     /**
      * Creates a new Reference of Type type
+     *
      * @param type type of reference created
      */
     private void createNewReference(ReferenceType type) {
@@ -239,6 +243,7 @@ public class TextUI {
 
     /**
      * Asks for values to fields given in List fieldKeys.
+     *
      * @param fieldKeys keys that values are asked for
      * @param fields where the value-key pairs are stored
      * @param canLeaveEmpty whether it's okay to leave a field empty
@@ -257,7 +262,9 @@ public class TextUI {
     }
 
     /**
-     * Prompt that asks the user a simple yes/no question and returns the value as boolean.
+     * Prompt that asks the user a simple yes/no question and returns the value
+     * as boolean.
+     *
      * @param prompt question to ask the user
      * @return true if answer equals "y", false otherwise
      */
@@ -268,6 +275,7 @@ public class TextUI {
 
     /**
      * Filters references by tag
+     *
      * @param refs List of references to be filtered
      * @param tag Tag to filter by
      * @return Filtered list.
@@ -278,12 +286,6 @@ public class TextUI {
                 .collect(Collectors.toList());
     }
 
-<<<<<<< HEAD
-    /**
-     * Sets up the user interface commands.
-     * @return hashmap with the choices.
-     */
-=======
     public void loadReferences() {
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
         if (filename.isEmpty()) {
@@ -310,7 +312,11 @@ public class TextUI {
         io.println("References saved successfully!");
     }
 
->>>>>>> 42a8d5c3a3f6ba749d4b75ca57c1dd92413a8980
+    /**
+     * Sets up the user interface commands.
+     *
+     * @return hashmap with the choices.
+     */
     private Map<String, Runnable> setUpChoices() {
         Map<String, Runnable> choices = new HashMap<>();
         choices.put("a", () -> addReference());
