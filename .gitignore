@@ -1,3 +1,4 @@
 *.DS_Store
 target/
 BibTex_export.txt
+BibTex_export.bib

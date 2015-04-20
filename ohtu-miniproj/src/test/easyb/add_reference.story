@@ -19,5 +19,6 @@ scenario "user can add a correctly formatted book type reference", {
 
     then 'new reference has been added', {
        io.getPrints().shouldHave("You have added a new reference!\n")
+       references.getReferences().size().shouldBe 1
     }
 }
