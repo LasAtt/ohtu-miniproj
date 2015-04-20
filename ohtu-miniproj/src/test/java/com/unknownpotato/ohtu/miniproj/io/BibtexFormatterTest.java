@@ -16,21 +16,33 @@ import java.util.HashMap;
 
 public class BibtexFormatterTest {
 
-    Reference ref;
+    Reference BookRef;
+    Reference ArticleRef;
+    Reference InproceedingsRef;
 
     @Before
     public void setUp() {
-//        ReferenceFactory.setReferences(new References());
-//        ref = ReferenceFactory.createBookReference("Victor Bankowski",
-//                "a Dive into the Rust Programming Language",
-//                "Unknownpotato publishing", "2051");
-//        ref.setName("Bankowski2051");
         HashMap<String, String> fields = new HashMap<String, String>();
         fields.put("author", "Victor Bankowski");
         fields.put("title", "a Dive into the Rust Programming Language");
         fields.put("publisher", "Unknownpotato publishing");
         fields.put("year", "2051");
-        ref = Reference.createReference(ReferenceType.BOOK, "Bankowski2051", fields);
+        BookRef = Reference.createReference(ReferenceType.BOOK, "Bankowski2051", fields);
+        
+        fields = new HashMap<String, String>();
+        fields.put("author", "Axel Wikström");
+        fields.put("title", "how the term BINARY!!! is really stupid");
+        fields.put("journal", "Some fukken IEEE thingy");
+        fields.put("year", "2050");
+        fields.put("volume", "12");
+        ArticleRef = Reference.createReference(ReferenceType.ARTICLE, "Wikström2050", fields);
+        
+        fields = new HashMap<String, String>();
+        fields.put("author", "Atte Lassila");
+        fields.put("title", "Voxi tekee rumia testejä");
+        fields.put("booktitle", "Kuinka tehdä hyvät testit");
+        fields.put("year", "2049");
+        InproceedingsRef = Reference.createReference(ReferenceType.INPROCEEDINGS, "Lassila:49", fields);
     }
     
     private Set<String> createCompareSet(ReferenceType type) {
@@ -44,6 +56,17 @@ public class BibtexFormatterTest {
 		        lines.add("title = \"a Dive into the Rust Programming Language\",");
 		        break;
 			case ARTICLE:
+				lines.add("author = \"Axel Wikström\",");
+				lines.add("title = \"how the term BINARY!!! is really stupid\",");
+				lines.add("journal = \"Some fukken IEEE thingy\",");
+				lines.add("year = \"2050\",");
+				lines.add("volume = \"12\",");
+				break;
+			case INPROCEEDINGS:
+				lines.add("author = \"Atte Lassila\",");
+				lines.add("title = \"Voxi tekee rumia testejä\",");
+				lines.add("booktitle = \"Kuinka tehdä hyvät testit\",");
+				lines.add("year = \"2049\",");
 				break;
 		}
 
@@ -52,12 +75,12 @@ public class BibtexFormatterTest {
 	}
 
     @Test
-    public void bookReferenceOutputIsCorrectTest() {
-    	String formatted = BibtexFormatter.convertReference(ref);
+    public void bookReferenceOutputIsCorrectWithMandatoryFieldsTest() {
+    	String formatted = BibtexFormatter.convertReference(BookRef);
         Scanner scanner = new Scanner(formatted);
 
         assertEquals("@Book{Bankowski2051,", scanner.nextLine());
-        Set<String> lines = createCompareSet(ref.getType());
+        Set<String> lines = createCompareSet(BookRef.getType());
 
         analyzeLines(scanner, lines);
     }
@@ -82,14 +105,25 @@ public class BibtexFormatterTest {
 	
     
     @Test
-    public void articleReferenceOutputIsCorrectTest() {
-    	String formatted = BibtexFormatter.convertReference(ref);
+    public void articleReferenceOutputIsCorrectWithMandatoryFieldsTest() {
+    	String formatted = BibtexFormatter.convertReference(ArticleRef);
         Scanner scanner = new Scanner(formatted);
 
-        assertEquals("@Article{Bankowski2051,", scanner.nextLine());
-        Set<String> lines = createCompareSet(ref.getType());
+        assertEquals("@Article{Wikström2050,", scanner.nextLine());
+        Set<String> lines = createCompareSet(ArticleRef.getType());
 
         analyzeLines(scanner, lines);
+    }
+    
+    @Test
+    public void inproceedingsReferenceOutputIsCorrectWithMandatoryFieldsTest() {
+    	String formatted = BibtexFormatter.convertReference(InproceedingsRef);
+    	Scanner scanner = new Scanner(formatted);
+    	
+    	assertEquals("@Inproceedings{Lassila:49,", scanner.nextLine());
+    	Set<String> lines = createCompareSet(InproceedingsRef.getType());
+    	
+    	analyzeLines(scanner, lines);
     }
 
 }

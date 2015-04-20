@@ -15,7 +15,7 @@ public enum ReferenceType {
             new String[]{"volume", "number", "series", "address", "edition", "month", "note"}),
     ARTICLE(new String[]{"author", "title", "journal", "year", "volume"},
             new String[]{"number", "pages", "month", "note", "key"}),
-    INPROCEEDINGS(new String[]{"author", "title", "booktitle"},
+    INPROCEEDINGS(new String[]{"author", "title", "booktitle", "year"},
             new String[]{"editor", "volume/number", "series", "pages", "address", "month", "organization", "publisher", "note", "key"}),
     BOOKLET(new String[]{"title"},
             new String[]{"author", "howpublished", "address", "month", "year", "note", "key"}),
