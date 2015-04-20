@@ -58,15 +58,8 @@ public class TextUI {
      */
     public void run() {
         Map<String, Runnable> choices = setUpChoices();
+        io.println("Welcome to BibTeX-reference formatter! Type help for a list of commands.");
         while (true) {
-            io.println("[A]dd new reference\n"
-                    + "[L]ist all references\n"
-                    + "[E]dit a reference\n"
-                    + "[D]elete a reference\n"
-                    + "e[X]port to BibTeX\n"
-                    + "[S]ave references JSON file\n"
-                    + "[O]pen references JSON file\n"
-                    + "[Q]uit");
             String choice = io.readCharacter(":");
             choice = choice.toLowerCase();
 
@@ -80,6 +73,21 @@ public class TextUI {
 
             choices.get(choice).run();
         }
+    }
+
+    /**
+     * Prints list of commands
+     */
+    private void listCommands() {
+        io.println("[H]elp\n"
+                + "[A]dd new reference\n"
+                + "[L]ist all references\n"
+                + "[E]dit a reference\n"
+                + "[D]elete a reference\n"
+                + "e[X]port to BibTeX\n"
+                + "[S]ave references JSON file\n"
+                + "[O]pen references JSON file\n"
+                + "[Q]uit");
     }
 
     /**
@@ -312,6 +320,7 @@ public class TextUI {
      */
     private Map<String, Runnable> setUpChoices() {
         Map<String, Runnable> choices = new HashMap<>();
+        choices.put("h", () -> listCommands());
         choices.put("a", () -> addReference());
         choices.put("l", () -> listReferences());
         choices.put("e", () -> editReference());
