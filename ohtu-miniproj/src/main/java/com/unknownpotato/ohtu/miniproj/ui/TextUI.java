@@ -170,15 +170,8 @@ public class TextUI {
             io.println("Reference " + name + " was deleted!");
         }
     }
-    <<<<<<< HEAD /**
-             * Edits a field in References.
-             */
 
     private void editReference() {
-         == == == =
-
-    public void editReference() {
-         >>> >>> > 42a8d5c3a3f6ba749d4b75ca57c1dd92413a8980
         boolean fieldWasFound = false;
         String name = io.readLine("Name the reference to be edited:\n");
         if (!references.getReferences().contains(references.getReference(name))) {
