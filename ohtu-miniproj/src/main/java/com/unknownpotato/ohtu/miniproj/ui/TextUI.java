@@ -58,8 +58,9 @@ public class TextUI {
      */
     public void run() {
         Map<String, Runnable> choices = setUpChoices();
-        io.println("Welcome to BibTeX-reference formatter! Type help for a list of commands.");
+        io.println("Welcome to BibTeX-reference formatter!");
         while (true) {
+            io.println("Type help for a list of commands.");
             String choice = io.readCharacter(":");
             choice = choice.toLowerCase();
 
@@ -68,6 +69,7 @@ public class TextUI {
             }
 
             if (!choices.containsKey(choice)) {
+                listCommands();
                 continue;
             }
 
