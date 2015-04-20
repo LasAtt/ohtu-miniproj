@@ -1,0 +1,10 @@
+{"references": [{
+    "fields": {
+        "author": "test testitys",
+        "publisher": "publisher",
+        "title": "title",
+        "year": "1999"
+    },
+    "name": "testitys99",
+    "type": "BOOK"
+}]}

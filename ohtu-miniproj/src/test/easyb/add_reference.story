@@ -5,7 +5,7 @@ import com.unknownpotato.ohtu.miniproj.ui.*
 
 description 'User can add a new reference to the program'
 
-scenario "user can add a correctly formatted book type reference", {
+scenario "user can add a correctly formatted reference", {
     given 'reference add attempt', {
         references = new References()
         
@@ -19,5 +19,6 @@ scenario "user can add a correctly formatted book type reference", {
 
     then 'new reference has been added', {
        io.getPrints().shouldHave("You have added a new reference!\n")
+       references.getReferences().size().shouldBe 1
     }
 }

@@ -1,5 +1,6 @@
 package com.unknownpotato.ohtu.miniproj.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -23,17 +24,30 @@ public class Reference {
     }
 
     private static String generateReferenceName(String name, Map<String, String> fields) {
-        String generatedName = fields.get("author");
-        generatedName = generatedName.substring(generatedName.lastIndexOf(" ") + 1);
-        generatedName = generatedName.toLowerCase();
-        String year = fields.get("year");
-        generatedName += year.substring(2);
+        String generatedName = "";
+        if (fields.get("author") != null && fields.get("year") != null) {
+            generatedName = fields.get("author");
+            generatedName = generatedName.substring(generatedName.lastIndexOf(" ") + 1);
+            generatedName = generatedName.toLowerCase();
+            String year = fields.get("year");
+            generatedName += year.substring(2);
+        } else {
+            for (String value : fields.values()) {
+                if(value != null){
+                    generatedName += value.substring(0, 2);
+                }
+                if(generatedName.length() > 8){
+                    break;
+                }
+            }
+        }
+
         return generatedName;
     }
 
     public static Reference createReference(ReferenceType type, String name, Map<String, String> fields) {
         String newName = name;
-        if(name.isEmpty()){
+        if (name.isEmpty()) {
             newName = generateReferenceName(name, fields);
         }
         Reference ref = new Reference(type, newName);
@@ -47,11 +61,11 @@ public class Reference {
         }
         return ref;
     }
-    
+
     public void addTag(String tag) {
         tags.add(tag);
     }
-    
+
     public void removeTag(String tag) {
         tags.remove(tag);
     }
@@ -65,6 +79,7 @@ public class Reference {
     }
 
     public String getField(String key) {
+        
         return fields.get(key);
     }
 

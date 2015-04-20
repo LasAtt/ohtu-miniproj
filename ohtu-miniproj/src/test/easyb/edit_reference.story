@@ -8,7 +8,7 @@ description 'User can edit a reference in the program'
 scenario "user can edit an existing reference", {
     given 'reference edit attempt', {
         references = new References()
-        io = new StubIO("a", "1", "author testitys", "title", "journal", "1995", "volume", "no", "e", "testitys95", "author", "author testaus", "q")
+        io = new StubIO("a", "1", "author testitys", "title", "journal", "1995", "volume", "no", "e", "testitys95", "author", "author testaus", "l", "q")
         ui = new TextUI(references, io)
     }
 
@@ -18,6 +18,7 @@ scenario "user can edit an existing reference", {
 
     then 'reference has been edited', {
        io.getPrints().shouldHave("The field author was edited!")
+       io.getPrints().shouldHave("- testitys95: { volume: volume journal: journal year: 1995 author: author testaus title: title  }")
     }
 }
 
