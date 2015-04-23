@@ -1,10 +1,22 @@
 {"references": [{
     "fields": {
-        "author": "test",
-        "publisher": "publicher",
-        "title": "test",
-        "year": "1992"
+<<<<<<< HEAD
+        "address": "ff",
+        "author": "asdf",
+        "number": "dd",
+        "publisher": "moi",
+        "title": "momom",
+        "year": "24324"
     },
-    "name": "test92",
+    "name": "asdf324",
+=======
+        "author": "test testitys",
+        "publisher": "publisher",
+        "title": "title",
+        "year": "1999"
+    },
+    "name": "testitys99",
+>>>>>>> 3ecb9c179c82b8b5c5f860954684471e0b63f4e3
+    "tags": [],
     "type": "BOOK"
 }]}

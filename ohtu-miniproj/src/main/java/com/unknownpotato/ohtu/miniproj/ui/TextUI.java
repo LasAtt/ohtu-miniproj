@@ -5,6 +5,7 @@
  */
 package com.unknownpotato.ohtu.miniproj.ui;
 
+import com.unknownpotato.ohtu.miniproj.domain.FieldValidator;
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
 import com.unknownpotato.ohtu.miniproj.domain.References;
@@ -13,6 +14,7 @@ import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
 import com.unknownpotato.ohtu.miniproj.io.IO;
 import com.unknownpotato.ohtu.miniproj.io.JSONReader;
 import com.unknownpotato.ohtu.miniproj.io.JSONWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.codehaus.plexus.util.StringUtils;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -77,6 +80,24 @@ public class TextUI {
     }
 
     /**
+     * Sets up the user interface commands.
+     *
+     * @return hashmap with the choices.
+     */
+    private Map<String, Runnable> setUpChoices() {
+        Map<String, Runnable> choices = new HashMap<>();
+        choices.put("h", () -> listCommands());
+        choices.put("a", () -> addReference());
+        choices.put("l", () -> listReferences());
+        choices.put("e", () -> editReference());
+        choices.put("d", () -> deleteReference());
+        choices.put("x", () -> exportToBibTex());
+        choices.put("s", () -> saveReferences());
+        choices.put("o", () -> loadReferences());
+        return choices;
+    }
+
+    /**
      * Prints list of commands
      */
     private void listCommands() {
@@ -99,11 +120,8 @@ public class TextUI {
             io.println(listReferenceCreationChoices());
             String choice = io.readCharacter(":");
             if (!StringUtils.isNumeric(choice)) {
-                switch (choice) {
-                    case ("q"):
-                        return;
-                    default:
-                        io.println("Invalid choice");
+                if (choice.equals("q")) {
+                    return;
                 }
             }
             int i = Integer.parseInt(choice);
@@ -171,31 +189,31 @@ public class TextUI {
      */
     private void deleteReference() {
         String name = io.readLine("Name the reference to be deleted:\n");
-        if (!references.getReferences().contains(references.getReference(name))) {
-            io.println("Reference " + name + " was not found!");
-        } else {
-            references.deleteReference(name);
+        if (references.deleteReference(name)) {
             io.println("Reference " + name + " was deleted!");
+        } else {
+            io.println("Reference " + name + " was not found!");
         }
     }
 
     private void editReference() {
         String name = io.readLine("Name the reference to be edited:\n");
-        if (!references.getReferences().contains(references.getReference(name))) {
+        if (!references.contains(name)) {
             io.println("Reference " + name + " was not found!");
             return;
         }
-        makeEdit(name);
+        Reference ref = references.getReference(name);
+        makeEdit(ref);
     }
 
-    private void makeEdit(String name) {
+    private void makeEdit(Reference ref) {
         boolean fieldWasFound = false;
         String fieldToEdit = io.readLine("Name the field to be edited:\n");
-        for (String field : references.getReference(name).getFieldKeys()) {
+        for (String field : ref.getFieldKeys()) {
             if (field.equals(fieldToEdit)) {
                 fieldWasFound = true;
                 String newFieldContent = io.readLine("Name the new content for this field:\n");
-                references.getReference(name).editField(field, newFieldContent);
+                ref.editField(field, newFieldContent);
                 io.println("The field " + fieldToEdit + " was edited!");
             }
         }
@@ -212,7 +230,6 @@ public class TextUI {
             io.println("No references found!");
             return;
         }
-
         try {
             FileWriterHandler writer = new FileWriterHandler("BibTex_export.bib");
             writer.writeTo(references.getReferences().stream()
@@ -267,6 +284,31 @@ public class TextUI {
     }
 
     /**
+     * Add tags read from user to reference.
+     *
+     * @param ref reference to tag
+     */
+    private void addTags(Reference ref) {
+        io.println("Input tags separated by spaces, leave empty to add no tags");
+        ref.addTag(readTags());
+    }
+
+    /**
+     * Removes tags from Reference
+     *
+     * @param ref reference to un-tag
+     */
+    private void removeTags(Reference ref) {
+        io.println("Input tags separated by spaces, leave empty to remove no tags");
+        ref.removeTag(readTags());
+    }
+
+    private String[] readTags() {
+        String input = io.readLine(": ");
+        return input.split(" ");
+    }
+
+    /**
      * Prompt that asks the user a simple yes/no question and returns the value
      * as boolean.
      *
@@ -279,31 +321,21 @@ public class TextUI {
     }
 
     /**
-     * Filters references by tag
      *
-     * @param refs List of references to be filtered
-     * @param tag Tag to filter by
-     * @return Filtered list.
      */
-    private List<Reference> filterByTag(List<Reference> refs, String tag) {
-        return refs.stream()
-                .filter(s -> s.getTags().contains(tag))
-                .collect(Collectors.toList());
-    }
-    
-    private List<Reference> filterBy(List<Reference> refs, ReferenceType type) {
-        return refs.stream()
-                .filter(s -> s.getType() == type)
-                .collect(Collectors.toList());
-    }
-
     private void loadReferences() {
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
+        
+        try {
+            references = JSONReader.loadReferences(filename);
+        } catch (FileNotFoundException ex) {
+            io.println("File not found!");
+        } catch (JSONException ex) {
+            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        references = JSONReader.loadReferences(filename);
-        if (references.getReferences().isEmpty()) {
+        if (references.getReferences().isEmpty())
             io.println("No references loaded!");
         } else {
             io.println("References loaded successfully!");
@@ -319,26 +351,20 @@ public class TextUI {
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
         }
-        JSONWriter.saveReferences(references, filename);
+        try {
+            JSONWriter.saveReferences(references, filename);
+        } catch (IOException | JSONException ex) {
+            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }
         io.println("References saved successfully!");
     }
 
-    /**
-     * Sets up the user interface commands.
-     *
-     * @return hashmap with the choices.
-     */
-    private Map<String, Runnable> setUpChoices() {
-        Map<String, Runnable> choices = new HashMap<>();
-        choices.put("h", () -> listCommands());
-        choices.put("a", () -> addReference());
-        choices.put("l", () -> listReferences());
-        choices.put("e", () -> editReference());
-        choices.put("d", () -> deleteReference());
-        choices.put("x", () -> exportToBibTex());
-        choices.put("s", () -> saveReferences());
-        choices.put("o", () -> loadReferences());
-        return choices;
+    private boolean isFieldInputValid(String field, boolean required, String input) {
+        if (required && input.isEmpty()) {
+            return false;
+        }
+        return FieldValidator.validate(field, input);
     }
 
 }

@@ -1,10 +1,10 @@
 package com.unknownpotato.ohtu.miniproj.domain;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Reference class that includes the type of reference and all necessary fields.
@@ -24,7 +24,7 @@ public class Reference {
         this.name = name;
         this.type = type;
         this.fields = new HashMap();
-        this.tags = new TreeSet<>();
+        this.tags = new LinkedHashSet<>();
     }
 /**
  * Generates a name for the Reference containing the last name of the author and the year.
@@ -44,7 +44,7 @@ public class Reference {
         } else {
             for (String value : fields.values()) {
                 if(value != null){
-                    generatedName += value.substring(0, 2);
+                    generatedName += value.substring(0, Math.min(value.length(), 2));
                 }
                 if(generatedName.length() > 8){
                     break;
@@ -80,11 +80,23 @@ public class Reference {
     }
 
     public void addTag(String tag) {
-        tags.add(tag);
+        tags.add(tag.trim().toLowerCase());
+    }
+    
+    public void addTag(String... tags) {
+        Arrays.asList(tags).stream().forEach(t -> {
+            addTag(t);
+        });
     }
 
     public void removeTag(String tag) {
         tags.remove(tag);
+    }
+    
+    public void removeTag(String... tags) {
+        Arrays.asList(tags).stream().forEach(t -> {
+            removeTag(t);
+        });
     }
 
     public Set<String> getTags() {
@@ -122,12 +134,14 @@ public class Reference {
      *
      * @param key
      * @param value
+     * @return 
      */
-    public void editField(String key, String value) {
+    public boolean editField(String key, String value) {
         if (!fields.containsKey(key)) {
-            throw new NoSuchFieldError("Reference" + type + " does not have field " + key);
+            return false;
         } else {
             fields.put(key, value);
+            return true;
         }
     }
 

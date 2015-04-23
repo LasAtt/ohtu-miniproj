@@ -25,12 +25,14 @@ public class References {
         refs.add(r);
     }
     
-    public void deleteReference(String name){
+    public boolean deleteReference(String name){
         for (int i = 0; i < refs.size(); i++) {
             if(refs.get(i).getName().equals(name)){
                 refs.remove(i);
+                return true;
             }
         }
+        return false;
     }
     
     public Reference getReference(String name) {
@@ -41,5 +43,9 @@ public class References {
 
     public List<Reference> getReferences() {
         return refs;
+    }
+    
+    public boolean contains(String name) {
+        return refs.stream().anyMatch(r -> r.getName().equals(name));
     }
 }

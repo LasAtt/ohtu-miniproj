@@ -8,9 +8,14 @@ package com.unknownpotato.ohtu.miniproj.io;
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
 import com.unknownpotato.ohtu.miniproj.domain.References;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -35,7 +40,7 @@ public class JSONIOTest {
     @AfterClass
     public static void tearDownClass() {
     }
-    References refs;
+    References refs, loadedRefs;
 
     @Before
     public void setUp() {
@@ -49,6 +54,14 @@ public class JSONIOTest {
         ref.addTag("cool");
         refs = new References();
         refs.addReference(ref);
+
+        try {
+            JSONWriter.saveReferences(refs, "test.json");
+
+            loadedRefs = JSONReader.loadReferences("test.json");
+        } catch (IOException | JSONException ex) {
+            Logger.getLogger(JSONIOTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @After
@@ -61,19 +74,29 @@ public class JSONIOTest {
     // @Test
     // public void hello() {}
     @Test
-    public void writeTest() {
-        JSONWriter.saveReferences(refs, "test.json");
+    public void fileExists() {
+
+        File f = new File("test.json");
+        assertTrue(f.exists());
     }
 
     @Test
-    public void readTest() {
-        References loadedRefs = JSONReader.loadReferences("test.json");
-        Assert.assertTrue(!loadedRefs.getReferences().isEmpty());
-        Reference ban = loadedRefs.getReference("Bankowski2051");
-        Assert.assertTrue(ban.getField("author").equals("Victor Bankowski"));
-        Assert.assertTrue(ban.getType() == ReferenceType.BOOK);
+    public void referenceIsLoaded() {
+        assertTrue(!loadedRefs.getReferences().isEmpty());
+        loadedReferenceHasCorrectTags();
+    }
 
+    @Test
+    public void loadedReferenceHasCorrectTags() {
+        Reference ban = loadedRefs.getReference("Bankowski2051");
         assertTrue(ban.getTags().size() == 2);
         assertTrue(ban.getTags().containsAll(Arrays.asList(new String[]{"asd", "cool"})));
+    }
+
+    @Test
+    public void loadedRefrenceHasCorrectFieldAndType() {
+        Reference ban = loadedRefs.getReference("Bankowski2051");
+        assertTrue(ban.getField("author").equals("Victor Bankowski"));
+        assertTrue(ban.getType() == ReferenceType.BOOK);
     }
 }
