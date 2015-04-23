@@ -60,7 +60,7 @@ public class TextUI {
         Map<String, Runnable> choices = setUpChoices();
         io.println("Welcome to BibTeX-reference formatter!");
         while (true) {
-            io.println("Type help for a list of commands.");
+            listCommands();
             String choice = io.readCharacter(":");
             choice = choice.toLowerCase();
 
@@ -69,7 +69,6 @@ public class TextUI {
             }
 
             if (!choices.containsKey(choice)) {
-                listCommands();
                 continue;
             }
 
@@ -81,14 +80,13 @@ public class TextUI {
      * Prints list of commands
      */
     private void listCommands() {
-        io.println("[H]elp\n"
-                + "[A]dd new reference\n"
-                + "[L]ist all references\n"
-                + "[E]dit a reference\n"
-                + "[D]elete a reference\n"
-                + "e[X]port to BibTeX\n"
-                + "[S]ave references JSON file\n"
-                + "[O]pen references JSON file\n"
+        io.println("[A]dd new reference, "
+                + "[L]ist all references, "
+                + "[E]dit a reference, "
+                + "[D]elete a reference,\n"
+                + "e[X]port to BibTeX, "
+                + "[S]ave references JSON file, "
+                + "[O]pen references JSON file, "
                 + "[Q]uit");
     }
 
@@ -182,23 +180,27 @@ public class TextUI {
     }
 
     private void editReference() {
-        boolean fieldWasFound = false;
         String name = io.readLine("Name the reference to be edited:\n");
         if (!references.getReferences().contains(references.getReference(name))) {
             io.println("Reference " + name + " was not found!");
-        } else {
-            String fieldToEdit = io.readLine("Name the field to be edited:\n");
-            for (String field : references.getReference(name).getFieldKeys()) {
-                if (field.equals(fieldToEdit)) {
-                    fieldWasFound = true;
-                    String newFieldContent = io.readLine("Name the new content for this field:\n");
-                    references.getReference(name).editField(field, newFieldContent);
-                    io.println("The field " + fieldToEdit + " was edited!");
-                }
+            return;
+        }
+        makeEdit(name);
+    }
+
+    private void makeEdit(String name) {
+        boolean fieldWasFound = false;
+        String fieldToEdit = io.readLine("Name the field to be edited:\n");
+        for (String field : references.getReference(name).getFieldKeys()) {
+            if (field.equals(fieldToEdit)) {
+                fieldWasFound = true;
+                String newFieldContent = io.readLine("Name the new content for this field:\n");
+                references.getReference(name).editField(field, newFieldContent);
+                io.println("The field " + fieldToEdit + " was edited!");
             }
-            if (fieldWasFound == false) {
-                io.println("The field " + fieldToEdit + " was not found!");
-            }
+        }
+        if (fieldWasFound == false) {
+            io.println("The field " + fieldToEdit + " was not found!");
         }
     }
 
