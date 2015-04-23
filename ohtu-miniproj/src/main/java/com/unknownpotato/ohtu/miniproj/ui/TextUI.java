@@ -1,10 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.unknownpotato.ohtu.miniproj.ui;
 
+import com.unknownpotato.ohtu.miniproj.domain.FieldValidator;
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
 import com.unknownpotato.ohtu.miniproj.domain.References;
@@ -13,14 +10,18 @@ import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
 import com.unknownpotato.ohtu.miniproj.io.IO;
 import com.unknownpotato.ohtu.miniproj.io.JSONReader;
 import com.unknownpotato.ohtu.miniproj.io.JSONWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.codehaus.plexus.util.StringUtils;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -143,7 +144,9 @@ public class TextUI {
         sb.append("Give reference type (");
         int i[] = {0};
         Arrays.asList(ReferenceType.values()).stream().forEach(t -> {
-            sb.append(i[0]++).append("=").append(t.name().toLowerCase()).append(", ");
+            sb.append(i[0]++).append("=")
+                    .append(t.name().toLowerCase())
+                    .append(", ");
         });
         sb.append("q=quit)");
         return sb.toString();
@@ -185,11 +188,10 @@ public class TextUI {
      */
     private void deleteReference() {
         String name = io.readLine("Name the reference to be deleted:\n");
-        if (!references.getReferences().contains(references.getReference(name))) {
-            io.println("Reference " + name + " was not found!");
-        } else {
-            references.deleteReference(name);
+        if (references.deleteReference(name)) {
             io.println("Reference " + name + " was deleted!");
+        } else {
+            io.println("Reference " + name + " was not found!");
         }
     }
 
@@ -201,18 +203,19 @@ public class TextUI {
         }
         return references.getReference(name);
     }
-    
+
     private void editReference() {
         Reference ref = findReference();
-        
+
         Map<String, Consumer<Reference>> editChoices = setUpEditingChoices();
-        
+
         io.println("[e]dit fields, [a]dd tags, [r]emove tags, [q]uit");
         String character = io.readCharacter("(" + ref.getName() + ") ");
-        
-        if (character.equals("q")) 
+
+        if (character.equals("q")) {
             return;
-        
+        }
+
         editChoices.get(character).accept(ref);
     }
 
@@ -223,9 +226,20 @@ public class TextUI {
         editingChoices.put("r", param -> removeTags(param));
         return editingChoices;
     }
-    
+
     private void editFields(Reference ref) {
+        Map<String, String> fields = ref.getFields();
+
+        io.println("Fill required fields");
+        askForFields(Arrays.asList(ref.getType().getRequiredFields()), fields, false);
+
+        if (getPermission("Fill optional fields? ([Y]es/[N]o):")) {
+            io.println("Fill optional fields, press enter to leave field empty.");
+            askForFields(Arrays.asList(ref.getType().getOptionalFields()), fields, true);
+        }
+
         
+        references.addReference(ref);
     }
 
     private void makeEdit(Reference ref) {
@@ -294,8 +308,7 @@ public class TextUI {
     private void askForFields(List<String> fieldKeys, Map<String, String> fields, boolean canLeaveEmpty) {
         fieldKeys.stream().forEach(f -> {
             String value = io.readLine(" " + f + ":");
-            while ((!canLeaveEmpty && value.isEmpty())
-                    || (f.equals("year") && (!StringUtils.isNumeric(value) || value.length() < 2))) {
+            while ((!isFieldInputValid(f, canLeaveEmpty, value))) {
                 value = io.readLine(" " + f + ":");
             }
             if (!value.isEmpty()) {
@@ -353,11 +366,16 @@ public class TextUI {
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
-        }
-
-        references = JSONReader.loadReferences(filename);
-        if (references.getReferences().isEmpty()) {
-            io.println("No references loaded!");
+            try {
+                references = JSONReader.loadReferences(filename);
+            } catch (FileNotFoundException ex) {
+                io.println("File not found!");
+            } catch (JSONException ex) {
+                Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (references.getReferences().isEmpty()) {
+                io.println("No references loaded!");
+            }
         } else {
             io.println("References loaded successfully!");
         }
@@ -373,9 +391,20 @@ public class TextUI {
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
         }
-
-        JSONWriter.saveReferences(references, filename);
+        try {
+            JSONWriter.saveReferences(references, filename);
+        } catch (IOException | JSONException ex) {
+            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }
         io.println("References saved successfully!");
+    }
+
+    private boolean isFieldInputValid(String field, boolean required, String input) {
+        if (required && input.isEmpty()) {
+            return false;
+        }
+        return FieldValidator.validate(field, input);
     }
 
 }

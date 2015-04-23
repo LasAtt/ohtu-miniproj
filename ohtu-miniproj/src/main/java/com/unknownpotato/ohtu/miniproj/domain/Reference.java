@@ -9,15 +9,15 @@ import java.util.Set;
 /**
  * Reference class that includes the type of reference and all necessary fields.
  */
-
 public class Reference {
 
     private Map<String, String> fields;
     private ReferenceType type;
     /**
-     * The name used to identify the reference in the bibtex format. Must be unique.
+     * The name used to identify the reference in the bibtex format. Must be
+     * unique.
      */
-    private String name; 
+    private String name;
     private Set<String> tags;
 
     private Reference(ReferenceType type, String name) {
@@ -26,13 +26,16 @@ public class Reference {
         this.fields = new HashMap();
         this.tags = new LinkedHashSet<>();
     }
-/**
- * Generates a name for the Reference containing the last name of the author and the year.
- * 
- * @param name
- * @param fields
- * @return Generated name used to identify the reference in the bibtex format.
- */
+
+    /**
+     * Generates a name for the Reference containing the last name of the author
+     * and the year.
+     *
+     * @param name
+     * @param fields
+     * @return Generated name used to identify the reference in the bibtex
+     * format.
+     */
     private static String generateReferenceName(String name, Map<String, String> fields) {
         String generatedName = "";
         if (fields.get("author") != null && fields.get("year") != null) {
@@ -43,10 +46,10 @@ public class Reference {
             generatedName += year.substring(2);
         } else {
             for (String value : fields.values()) {
-                if(value != null){
-                    generatedName += value.substring(0, 2);
+                if (value != null) {
+                    generatedName += value.substring(0, Math.min(value.length(), 2));
                 }
-                if(generatedName.length() > 8){
+                if (generatedName.length() > 8) {
                     break;
                 }
             }
@@ -56,7 +59,9 @@ public class Reference {
     }
 
     /**
-     * Creates a new Reference. It only adds the fields that are defined in the ReferenceType.
+     * Creates a new Reference. It only adds the fields that are defined in the
+     * ReferenceType.
+     *
      * @param type
      * @param name If empty, a name is generated.
      * @param fields Map containing the field name as key.
@@ -79,10 +84,17 @@ public class Reference {
         return ref;
     }
 
+    public void editFields(Map<String, String> fields) {
+        fields.keySet().stream().filter(f -> {
+            return Arrays.asList(type.getRequiredFields()).contains(f)
+                    || Arrays.asList(type.getOptionalFields()).contains(f);
+        }).forEach(f -> fields.put(f, fields.get(f)));
+    }
+
     public void addTag(String tag) {
         tags.add(tag.trim().toLowerCase());
     }
-    
+
     public void addTag(String... tags) {
         Arrays.asList(tags).stream().forEach(t -> {
             addTag(t);
@@ -92,7 +104,7 @@ public class Reference {
     public void removeTag(String tag) {
         tags.remove(tag);
     }
-    
+
     public void removeTag(String... tags) {
         Arrays.asList(tags).stream().forEach(t -> {
             removeTag(t);
@@ -102,8 +114,11 @@ public class Reference {
     public Set<String> getTags() {
         return tags;
     }
+
     /**
-     * Adds a field to the reference. Does not check that the ReferenceType has a field with key.
+     * Adds a field to the reference. Does not check that the ReferenceType has
+     * a field with key.
+     *
      * @param key
      * @param value
      */
@@ -112,7 +127,7 @@ public class Reference {
     }
 
     public String getField(String key) {
-        
+
         return fields.get(key);
     }
 
@@ -134,12 +149,14 @@ public class Reference {
      *
      * @param key
      * @param value
+     * @return
      */
-    public void editField(String key, String value) {
+    public boolean editField(String key, String value) {
         if (!fields.containsKey(key)) {
-            throw new NoSuchFieldError("Reference" + type + " does not have field " + key);
+            return false;
         } else {
             fields.put(key, value);
+            return true;
         }
     }
 
