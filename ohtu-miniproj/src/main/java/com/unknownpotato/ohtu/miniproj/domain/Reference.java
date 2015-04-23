@@ -1,10 +1,10 @@
 package com.unknownpotato.ohtu.miniproj.domain;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Reference class that includes the type of reference and all necessary fields.
@@ -24,7 +24,7 @@ public class Reference {
         this.name = name;
         this.type = type;
         this.fields = new HashMap();
-        this.tags = new TreeSet<>();
+        this.tags = new LinkedHashSet<>();
     }
 /**
  * Generates a name for the Reference containing the last name of the author and the year.
@@ -80,11 +80,23 @@ public class Reference {
     }
 
     public void addTag(String tag) {
-        tags.add(tag);
+        tags.add(tag.trim().toLowerCase());
+    }
+    
+    public void addTag(String... tags) {
+        Arrays.asList(tags).stream().forEach(t -> {
+            addTag(t);
+        });
     }
 
     public void removeTag(String tag) {
         tags.remove(tag);
+    }
+    
+    public void removeTag(String... tags) {
+        Arrays.asList(tags).stream().forEach(t -> {
+            removeTag(t);
+        });
     }
 
     public Set<String> getTags() {
