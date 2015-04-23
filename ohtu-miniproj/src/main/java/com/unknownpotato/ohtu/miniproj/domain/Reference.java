@@ -134,12 +134,14 @@ public class Reference {
      *
      * @param key
      * @param value
+     * @return 
      */
-    public void editField(String key, String value) {
+    public boolean editField(String key, String value) {
         if (!fields.containsKey(key)) {
-            throw new NoSuchFieldError("Reference" + type + " does not have field " + key);
+            return false;
         } else {
             fields.put(key, value);
+            return true;
         }
     }
 

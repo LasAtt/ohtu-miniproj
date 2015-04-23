@@ -6,6 +6,7 @@
 package com.unknownpotato.ohtu.miniproj.domain;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -16,6 +17,15 @@ public final class ReferenceUtils {
 
     private ReferenceUtils() {
     }
+    
+    /**
+     * Generates name for reference in according to it's fields
+     * @param name
+     * @param fields
+     * @return 
+     */
+
+
 
     /**
      * Filters references by tag

@@ -185,17 +185,16 @@ public class TextUI {
      */
     private void deleteReference() {
         String name = io.readLine("Name the reference to be deleted:\n");
-        if (!references.getReferences().contains(references.getReference(name))) {
-            io.println("Reference " + name + " was not found!");
-        } else {
-            references.deleteReference(name);
+        if (references.deleteReference(name)) {
             io.println("Reference " + name + " was deleted!");
+        } else {
+            io.println("Reference " + name + " was not found!");
         }
     }
 
     private void editReference() {
         String name = io.readLine("Name the reference to be edited:\n");
-        if (!references.getReferences().contains(references.getReference(name))) {
+        if (!references.contains(name)) {
             io.println("Reference " + name + " was not found!");
             return;
         }
