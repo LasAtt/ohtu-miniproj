@@ -13,6 +13,7 @@ import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
 import com.unknownpotato.ohtu.miniproj.io.IO;
 import com.unknownpotato.ohtu.miniproj.io.JSONReader;
 import com.unknownpotato.ohtu.miniproj.io.JSONWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.codehaus.plexus.util.StringUtils;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -323,7 +325,13 @@ public class TextUI {
         if (filename.isEmpty())
             filename = DEFAULT_FILENAME;
         
-        references = JSONReader.loadReferences(filename);
+        try {
+            references = JSONReader.loadReferences(filename);
+        } catch (FileNotFoundException ex) {
+            io.println("File not found!");
+        } catch (JSONException ex) {
+            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (references.getReferences().isEmpty())
             io.println("No references loaded!");
         else 
@@ -339,7 +347,12 @@ public class TextUI {
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
         }
-        JSONWriter.saveReferences(references, filename);
+        try {
+            JSONWriter.saveReferences(references, filename);
+        } catch (IOException | JSONException ex) {
+            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }
         io.println("References saved successfully!");
     }
 

@@ -1,10 +1,11 @@
 {"references": [{
     "fields": {
-        "author": "test",
-        "publisher": "publicher",
-        "title": "test",
-        "year": "1992"
+        "author": "test testitys",
+        "publisher": "publisher",
+        "title": "title",
+        "year": "1999"
     },
-    "name": "test92",
+    "name": "testitys99",
+    "tags": [],
     "type": "BOOK"
 }]}

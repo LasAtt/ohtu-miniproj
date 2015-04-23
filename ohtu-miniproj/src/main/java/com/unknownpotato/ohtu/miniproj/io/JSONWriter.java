@@ -20,25 +20,21 @@ import org.json.JSONObject;
  */
 public class JSONWriter {
 
-    public static void saveReferences(References ref, String filename) {
-        try {
-            FileWriterHandler w = new FileWriterHandler(filename);
+    public static void saveReferences(References ref, String filename) throws IOException, JSONException {
+            FileWriterHandler fw = new FileWriterHandler(filename);
             JSONObject jo = new JSONObject();
-            JSONArray ja = new JSONArray();
+            JSONArray referencesJA = new JSONArray();
             for (Reference r : ref.getReferences()) {
-                JSONObject rjo = new JSONObject();
-                rjo.put("name", r.getName());
-                rjo.put("type", r.getType().name());
-                rjo.put("fields", r.getFields());
+                JSONObject referenceJO = new JSONObject();
+                referenceJO.put("name", r.getName());
+                referenceJO.put("type", r.getType().name());
+                referenceJO.put("fields", r.getFields());
                 JSONArray tja = new JSONArray(r.getTags());
-                rjo.put("tags", tja);
-                ja.put(rjo);
+                referenceJO.put("tags", tja);
+                referencesJA.put(referenceJO);
             }
-            jo.put("references", ja);
-            w.writeTo(jo.toString(4));
-        } catch (IOException | JSONException ex) {
-            Logger.getLogger(JSONWriter.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            jo.put("references", referencesJA);
+            fw.writeTo(jo.toString(4));
 
     }
 }
