@@ -42,4 +42,8 @@ public class References {
     public List<Reference> getReferences() {
         return refs;
     }
+    
+    public boolean contains(String name) {
+        return refs.stream().anyMatch(r -> r.getName().equals(name));
+    }
 }
