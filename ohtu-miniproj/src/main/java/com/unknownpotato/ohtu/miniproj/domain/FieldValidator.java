@@ -11,7 +11,7 @@ public class FieldValidator {
     public static boolean validate(String field, String input) {
         switch (field) {
             case ("year"):
-                return (StringUtils.isNumeric(input) && input.length() > 3);
+                return (StringUtils.isNumeric(input) && input.length() >= 3);
             case ("chapter"):
                 return (StringUtils.isNumeric(input));
         }
