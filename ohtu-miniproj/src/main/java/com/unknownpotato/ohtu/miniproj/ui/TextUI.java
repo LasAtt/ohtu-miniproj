@@ -186,20 +186,21 @@ public class TextUI {
         String name = io.readLine("Name the reference to be edited:\n");
         if (!references.getReferences().contains(references.getReference(name))) {
             io.println("Reference " + name + " was not found!");
-        } else {
-            String fieldToEdit = io.readLine("Name the field to be edited:\n");
-            for (String field : references.getReference(name).getFieldKeys()) {
-                if (field.equals(fieldToEdit)) {
-                    fieldWasFound = true;
-                    String newFieldContent = io.readLine("Name the new content for this field:\n");
-                    references.getReference(name).editField(field, newFieldContent);
-                    io.println("The field " + fieldToEdit + " was edited!");
-                }
-            }
-            if (fieldWasFound == false) {
-                io.println("The field " + fieldToEdit + " was not found!");
+            return;
+        }
+        String fieldToEdit = io.readLine("Name the field to be edited:\n");
+        for (String field : references.getReference(name).getFieldKeys()) {
+            if (field.equals(fieldToEdit)) {
+                fieldWasFound = true;
+                String newFieldContent = io.readLine("Name the new content for this field:\n");
+                references.getReference(name).editField(field, newFieldContent);
+                io.println("The field " + fieldToEdit + " was edited!");
             }
         }
+        if (fieldWasFound == false) {
+            io.println("The field " + fieldToEdit + " was not found!");
+        }
+
     }
 
     /**
@@ -286,6 +287,12 @@ public class TextUI {
     private List<Reference> filterByTag(List<Reference> refs, String tag) {
         return refs.stream()
                 .filter(s -> s.getTags().contains(tag))
+                .collect(Collectors.toList());
+    }
+    
+    private List<Reference> filterBy(List<Reference> refs, ReferenceType type) {
+        return refs.stream()
+                .filter(s -> s.getType() == type)
                 .collect(Collectors.toList());
     }
 
