@@ -5,6 +5,7 @@
  */
 package com.unknownpotato.ohtu.miniproj.ui;
 
+import com.unknownpotato.ohtu.miniproj.domain.FieldValidator;
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
 import com.unknownpotato.ohtu.miniproj.domain.References;
@@ -13,6 +14,7 @@ import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
 import com.unknownpotato.ohtu.miniproj.io.IO;
 import com.unknownpotato.ohtu.miniproj.io.JSONReader;
 import com.unknownpotato.ohtu.miniproj.io.JSONWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.codehaus.plexus.util.StringUtils;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -75,7 +78,7 @@ public class TextUI {
             choices.get(choice).run();
         }
     }
-    
+
     /**
      * Sets up the user interface commands.
      *
@@ -117,8 +120,9 @@ public class TextUI {
             io.println(listReferenceCreationChoices());
             String choice = io.readCharacter(":");
             if (!StringUtils.isNumeric(choice)) {
-                if (choice.equals("q"))
+                if (choice.equals("q")) {
                     return;
+                }
             }
             int i = Integer.parseInt(choice);
             if (i < 0 || i >= ReferenceType.values().length) {
@@ -278,25 +282,27 @@ public class TextUI {
             }
         });
     }
-    
+
     /**
      * Add tags read from user to reference.
+     *
      * @param ref reference to tag
      */
     private void addTags(Reference ref) {
         io.println("Input tags separated by spaces, leave empty to add no tags");
         ref.addTag(readTags());
     }
-    
+
     /**
      * Removes tags from Reference
+     *
      * @param ref reference to un-tag
      */
     private void removeTags(Reference ref) {
         io.println("Input tags separated by spaces, leave empty to remove no tags");
-        ref.removeTag(readTags());        
+        ref.removeTag(readTags());
     }
-    
+
     private String[] readTags() {
         String input = io.readLine(": ");
         return input.split(" ");
@@ -315,18 +321,32 @@ public class TextUI {
     }
 
     /**
-     * 
+     *
      */
     private void loadReferences() {
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
-        if (filename.isEmpty())
+        if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
+<<<<<<< HEAD
         
-        references = JSONReader.loadReferences(filename);
+        try {
+            references = JSONReader.loadReferences(filename);
+        } catch (FileNotFoundException ex) {
+            io.println("File not found!");
+        } catch (JSONException ex) {
+            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (references.getReferences().isEmpty())
+=======
+        }
+
+        references = JSONReader.loadReferences(filename);
+        if (references.getReferences().isEmpty()) {
+>>>>>>> d898e7876e3d69dbfd3cc13089174fa1ff75db98
             io.println("No references loaded!");
-        else 
+        } else {
             io.println("References loaded successfully!");
+        }
     }
 
     private void saveReferences() {
@@ -338,8 +358,20 @@ public class TextUI {
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
         }
-        JSONWriter.saveReferences(references, filename);
+        try {
+            JSONWriter.saveReferences(references, filename);
+        } catch (IOException | JSONException ex) {
+            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }
         io.println("References saved successfully!");
+    }
+
+    private boolean isFieldInputValid(String field, boolean required, String input) {
+        if (required && input.isEmpty()) {
+            return false;
+        }
+        return FieldValidator.validate(field, input);
     }
 
 }
