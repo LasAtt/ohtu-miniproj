@@ -14,9 +14,9 @@ public class App {
 //        ApplicationContext ctx = new FileSystemXmlApplicationContext("src/main/resources/spring-context.xml");
 //
 //        References references = ctx.getBean(References.class);
-//        ReferenceFactory factory = ctx.getBean(ReferenceFactory.class);
+//        IO io = ctx.getBean(IO.class);
 //        TextUI textUi = ctx.getBean(TextUI.class);
-        
+
         References references = new References();
         TextUI textUi = new TextUI(references, new ConsoleIO());
         textUi.run();
