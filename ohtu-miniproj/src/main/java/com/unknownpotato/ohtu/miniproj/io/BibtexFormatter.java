@@ -10,6 +10,15 @@ import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
  */
 public class BibtexFormatter {
 
+	
+	/**
+	 * Converts a Reference to a String that is in Bibtex format
+	 * 
+	 * This method does not check the validity of the Reference.
+	 * 
+	 * @param ref
+	 * @return String formatted in bibtex format
+	 */
 	public static String convertReference(Reference ref) {
 		ReferenceType type = ref.getType();
 		

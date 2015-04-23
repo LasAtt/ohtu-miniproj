@@ -9,11 +9,15 @@ import java.util.TreeSet;
 /**
  * Reference class that includes the type of reference and all necessary fields.
  */
+
 public class Reference {
 
     private Map<String, String> fields;
     private ReferenceType type;
-    private String name;
+    /**
+     * The name used to identify the reference in the bibtex format. Must be unique.
+     */
+    private String name; 
     private Set<String> tags;
 
     private Reference(ReferenceType type, String name) {
@@ -22,7 +26,13 @@ public class Reference {
         this.fields = new HashMap();
         this.tags = new TreeSet<>();
     }
-
+/**
+ * Generates a name for the Reference containing the last name of the author and the year.
+ * 
+ * @param name
+ * @param fields
+ * @return Generated name used to identify the reference in the bibtex format.
+ */
     private static String generateReferenceName(String name, Map<String, String> fields) {
         String generatedName = "";
         if (fields.get("author") != null && fields.get("year") != null) {
@@ -45,6 +55,13 @@ public class Reference {
         return generatedName;
     }
 
+    /**
+     * Creates a new Reference. It only adds the fields that are defined in the ReferenceType.
+     * @param type
+     * @param name If empty, a name is generated.
+     * @param fields Map containing the field name as key.
+     * @return
+     */
     public static Reference createReference(ReferenceType type, String name, Map<String, String> fields) {
         String newName = name;
         if (name.isEmpty()) {
@@ -73,7 +90,11 @@ public class Reference {
     public Set<String> getTags() {
         return tags;
     }
-
+    /**
+     * Adds a field to the reference. Does not check that the ReferenceType has a field with key.
+     * @param key
+     * @param value
+     */
     protected void addField(String key, String value) {
         fields.put(key, value);
     }

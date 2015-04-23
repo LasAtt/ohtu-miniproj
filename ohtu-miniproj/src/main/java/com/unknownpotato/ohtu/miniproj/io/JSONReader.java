@@ -38,6 +38,10 @@ public class JSONReader {
                     fields.put(key, fjo.getString(key));
                 }
                 Reference r = Reference.createReference(ReferenceType.valueOf(rjo.getString("type")), rjo.getString("name"), fields);
+                JSONArray tja = rjo.getJSONArray("tags");
+                for (int j = 0; j < tja.length(); j++) {
+                    r.addTag(tja.getString(j));
+                }
                 ref.addReference(r);
             }
         } catch (FileNotFoundException | JSONException ex) {
