@@ -207,17 +207,12 @@ public class TextUI {
     }
 
     private void makeEdit(Reference ref) {
-        boolean fieldWasFound = false;
         String fieldToEdit = io.readLine("Name the field to be edited:\n");
-        for (String field : ref.getFieldKeys()) {
-            if (field.equals(fieldToEdit)) {
-                fieldWasFound = true;
-                String newFieldContent = io.readLine("Name the new content for this field:\n");
-                ref.editField(field, newFieldContent);
-                io.println("The field " + fieldToEdit + " was edited!");
-            }
-        }
-        if (fieldWasFound == false) {
+        if (ref.fieldExists(fieldToEdit)) {
+            String newFieldContent = io.readLine("Name the new content for this field:\n");
+            ref.editField(fieldToEdit, newFieldContent);
+            io.println("The field " + fieldToEdit + " was edited!");
+        } else {
             io.println("The field " + fieldToEdit + " was not found!");
         }
     }
@@ -326,16 +321,17 @@ public class TextUI {
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
-        
-        try {
-            references = JSONReader.loadReferences(filename);
-        } catch (FileNotFoundException ex) {
-            io.println("File not found!");
-        } catch (JSONException ex) {
-            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (references.getReferences().isEmpty())
-            io.println("No references loaded!");
+
+            try {
+                references = JSONReader.loadReferences(filename);
+            } catch (FileNotFoundException ex) {
+                io.println("File not found!");
+            } catch (JSONException ex) {
+                Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (references.getReferences().isEmpty()) {
+                io.println("No references loaded!");
+            }
         } else {
             io.println("References loaded successfully!");
         }

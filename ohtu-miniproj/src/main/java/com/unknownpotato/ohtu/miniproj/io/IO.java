@@ -5,6 +5,7 @@ import java.util.List;
 /**
  * IO interface
  */
+
 public interface IO {
     /**
      * Read a line from input.
