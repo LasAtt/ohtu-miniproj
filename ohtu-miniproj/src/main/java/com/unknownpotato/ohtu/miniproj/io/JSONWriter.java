@@ -30,6 +30,8 @@ public class JSONWriter {
                 rjo.put("name", r.getName());
                 rjo.put("type", r.getType().name());
                 rjo.put("fields", r.getFields());
+                JSONArray tja = new JSONArray(r.getTags());
+                rjo.put("tags", tja);
                 ja.put(rjo);
             }
             jo.put("references", ja);
