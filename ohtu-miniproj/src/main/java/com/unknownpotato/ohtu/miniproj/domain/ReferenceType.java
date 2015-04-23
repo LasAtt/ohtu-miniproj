@@ -28,7 +28,19 @@ public enum ReferenceType {
     INCOLLECTION(new String[]{"author", "title", "booktitle", "publisher", "year"},
             new String[]{"editor", "volume/number", "series", "type", "chapter", "pages", "address", "edition", "month", "note", "key"}),
     MANUAL(new String[]{"title"},
-            new String[]{"author", "organization"});
+            new String[]{"author", "organization"}),
+    MASTERSTHESIS(new String[]{"author", "title", "school", "year"},
+    		new String[]{"type", "address", "month", "note", "key"}),
+    MISC(new String[]{},
+    		new String[]{"author", "title", "howpublished", "month", "note", "key"}),
+    PHDTHESIS(new String[]{"author", "title", "school", "year"},
+    		new String[]{"type", "address", "month", "note", "key"}),
+    PROCEEDINGS(new String[]{"title", "year"},
+    		new String[]{"editor", "volume/number", "series", "address", "month", "publisher", "organization", "note", "key"}),
+    TECHREPORT(new String[]{"author", "title", "institution", "year"},
+    		new String[]{"type", "number", "address", "month", "note", "key"}),
+    UNPUBLISHED(new String[]{"author", "title", "note"},
+    		new String[]{"month", "year", "key"});
 
     private final String[] requiredFields, optionalFields;
 
