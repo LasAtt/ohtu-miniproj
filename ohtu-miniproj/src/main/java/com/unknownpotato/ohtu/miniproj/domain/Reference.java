@@ -34,7 +34,7 @@ public class Reference {
         } else {
             for (String value : fields.values()) {
                 if(value != null){
-                    generatedName += value.substring(0, 2);
+                    generatedName += value.substring(0, Math.min(value.length(), 2));
                 }
                 if(generatedName.length() > 8){
                     break;
