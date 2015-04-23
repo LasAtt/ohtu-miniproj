@@ -18,8 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class TextUI {
     /**
      * Handles reading input and writing output for the class.
      */
-    private IO io;
+    private final IO io;
     /**
      * References handles the references stored in memory.
      */
@@ -60,7 +59,7 @@ public class TextUI {
         Map<String, Runnable> choices = setUpChoices();
         io.println("Welcome to BibTeX-reference formatter!");
         while (true) {
-            listCommands();
+            io.println("Input help to see commands");
             String choice = io.readCharacter(":");
             choice = choice.toLowerCase();
 
@@ -75,14 +74,14 @@ public class TextUI {
             choices.get(choice).run();
         }
     }
-    
+
     /**
      * Sets up the user interface commands.
      *
      * @return hashmap with the choices.
      */
     private Map<String, Runnable> setUpChoices() {
-        Map<String, Runnable> choices = new HashMap<>();
+        final Map<String, Runnable> choices = new HashMap<>();
         choices.put("h", () -> listCommands());
         choices.put("a", () -> addReference());
         choices.put("l", () -> listReferences());
@@ -98,14 +97,14 @@ public class TextUI {
      * Prints list of commands
      */
     private void listCommands() {
-        io.println("[A]dd new reference, "
-                + "[L]ist all references, "
-                + "[E]dit a reference, "
+        io.println("[A]dd new reference,\n"
+                + "[L]ist all references,\n"
+                + "[E]dit a reference,\n"
                 + "[D]elete a reference,\n"
-                + "e[X]port to BibTeX, "
-                + "[S]ave references JSON file, "
-                + "[O]pen references JSON file, "
-                + "[Q]uit");
+                + "e[X]port to BibTeX,\n"
+                + "[S]ave references JSON file,\n"
+                + "[O]pen references JSON file,\n"
+                + "[Q]uit\n");
     }
 
     /**
@@ -117,8 +116,9 @@ public class TextUI {
             io.println(listReferenceCreationChoices());
             String choice = io.readCharacter(":");
             if (!StringUtils.isNumeric(choice)) {
-                if (choice.equals("q"))
+                if (choice.equals("q")) {
                     return;
+                }
             }
             int i = Integer.parseInt(choice);
             if (i < 0 || i >= ReferenceType.values().length) {
@@ -193,14 +193,39 @@ public class TextUI {
         }
     }
 
-    private void editReference() {
+    private Reference findReference() {
         String name = io.readLine("Name the reference to be edited:\n");
-        if (!references.getReferences().contains(references.getReference(name))) {
+        if (!references.contains(name)) {
             io.println("Reference " + name + " was not found!");
-            return;
+            return null;
         }
-        Reference ref = references.getReference(name);
-        makeEdit(ref);
+        return references.getReference(name);
+    }
+    
+    private void editReference() {
+        Reference ref = findReference();
+        
+        Map<String, Consumer<Reference>> editChoices = setUpEditingChoices();
+        
+        io.println("[e]dit fields, [a]dd tags, [r]emove tags, [q]uit");
+        String character = io.readCharacter("(" + ref.getName() + ") ");
+        
+        if (character.equals("q")) 
+            return;
+        
+        editChoices.get(character).accept(ref);
+    }
+
+    private Map<String, Consumer<Reference>> setUpEditingChoices() {
+        final Map<String, Consumer<Reference>> editingChoices = new HashMap<>();
+        editingChoices.put("e", param -> editFields(param));
+        editingChoices.put("a", param -> addTags(param));
+        editingChoices.put("r", param -> removeTags(param));
+        return editingChoices;
+    }
+    
+    private void editFields(Reference ref) {
+        
     }
 
     private void makeEdit(Reference ref) {
@@ -220,7 +245,7 @@ public class TextUI {
     }
 
     /**
-     * Exports references to running directory file BibTex_export.bib
+     * Exports references to running directory file BibTex_export.bib.
      */
     private void exportToBibTex() {
         if (references.getReferences().isEmpty()) {
@@ -233,7 +258,6 @@ public class TextUI {
                     .map(r -> BibtexFormatter.convertReference(r))
                     .collect(Collectors.toList()));
         } catch (IOException ex) {
-            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
             io.println("Export failed!");
             return;
         }
@@ -279,25 +303,32 @@ public class TextUI {
             }
         });
     }
-    
+
     /**
      * Add tags read from user to reference.
+     *
      * @param ref reference to tag
      */
     private void addTags(Reference ref) {
         io.println("Input tags separated by spaces, leave empty to add no tags");
         ref.addTag(readTags());
     }
-    
+
     /**
      * Removes tags from Reference
+     *
      * @param ref reference to un-tag
      */
     private void removeTags(Reference ref) {
         io.println("Input tags separated by spaces, leave empty to remove no tags");
-        ref.removeTag(readTags());        
+        ref.removeTag(readTags());
     }
-    
+
+    /**
+     * Read tags to be added/removed from input.
+     *
+     * @return tags read from input
+     */
     private String[] readTags() {
         String input = io.readLine(": ");
         return input.split(" ");
@@ -316,18 +347,20 @@ public class TextUI {
     }
 
     /**
-     * 
+     *
      */
     private void loadReferences() {
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
-        if (filename.isEmpty())
+        if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
-        
+        }
+
         references = JSONReader.loadReferences(filename);
-        if (references.getReferences().isEmpty())
+        if (references.getReferences().isEmpty()) {
             io.println("No references loaded!");
-        else 
+        } else {
             io.println("References loaded successfully!");
+        }
     }
 
     private void saveReferences() {
@@ -335,10 +368,12 @@ public class TextUI {
             io.println("No references found!");
             return;
         }
+
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
         }
+
         JSONWriter.saveReferences(references, filename);
         io.println("References saved successfully!");
     }
