@@ -5,6 +5,7 @@
  */
 package com.unknownpotato.ohtu.miniproj.ui;
 
+import com.unknownpotato.ohtu.miniproj.domain.FieldValidator;
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
 import com.unknownpotato.ohtu.miniproj.domain.References;
@@ -75,7 +76,7 @@ public class TextUI {
             choices.get(choice).run();
         }
     }
-    
+
     /**
      * Sets up the user interface commands.
      *
@@ -117,8 +118,9 @@ public class TextUI {
             io.println(listReferenceCreationChoices());
             String choice = io.readCharacter(":");
             if (!StringUtils.isNumeric(choice)) {
-                if (choice.equals("q"))
+                if (choice.equals("q")) {
                     return;
+                }
             }
             int i = Integer.parseInt(choice);
             if (i < 0 || i >= ReferenceType.values().length) {
@@ -279,25 +281,27 @@ public class TextUI {
             }
         });
     }
-    
+
     /**
      * Add tags read from user to reference.
+     *
      * @param ref reference to tag
      */
     private void addTags(Reference ref) {
         io.println("Input tags separated by spaces, leave empty to add no tags");
         ref.addTag(readTags());
     }
-    
+
     /**
      * Removes tags from Reference
+     *
      * @param ref reference to un-tag
      */
     private void removeTags(Reference ref) {
         io.println("Input tags separated by spaces, leave empty to remove no tags");
-        ref.removeTag(readTags());        
+        ref.removeTag(readTags());
     }
-    
+
     private String[] readTags() {
         String input = io.readLine(": ");
         return input.split(" ");
@@ -316,18 +320,20 @@ public class TextUI {
     }
 
     /**
-     * 
+     *
      */
     private void loadReferences() {
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
-        if (filename.isEmpty())
+        if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
-        
+        }
+
         references = JSONReader.loadReferences(filename);
-        if (references.getReferences().isEmpty())
+        if (references.getReferences().isEmpty()) {
             io.println("No references loaded!");
-        else 
+        } else {
             io.println("References loaded successfully!");
+        }
     }
 
     private void saveReferences() {
@@ -341,6 +347,13 @@ public class TextUI {
         }
         JSONWriter.saveReferences(references, filename);
         io.println("References saved successfully!");
+    }
+
+    private boolean isFieldInputValid(String field, boolean required, String input) {
+        if (required && input.isEmpty()) {
+            return false;
+        }
+        return FieldValidator.validate(field, input);
     }
 
 }
