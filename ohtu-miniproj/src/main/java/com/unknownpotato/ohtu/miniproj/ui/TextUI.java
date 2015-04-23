@@ -327,7 +327,6 @@ public class TextUI {
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
-<<<<<<< HEAD
         
         try {
             references = JSONReader.loadReferences(filename);
@@ -337,12 +336,6 @@ public class TextUI {
             Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (references.getReferences().isEmpty())
-=======
-        }
-
-        references = JSONReader.loadReferences(filename);
-        if (references.getReferences().isEmpty()) {
->>>>>>> d898e7876e3d69dbfd3cc13089174fa1ff75db98
             io.println("No references loaded!");
         } else {
             io.println("References loaded successfully!");
