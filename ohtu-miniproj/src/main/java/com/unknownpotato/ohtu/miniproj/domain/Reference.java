@@ -19,43 +19,12 @@ public class Reference {
      */
     private String name;
     private Set<String> tags;
-
+    
     private Reference(ReferenceType type, String name) {
         this.name = name;
         this.type = type;
         this.fields = new HashMap();
         this.tags = new LinkedHashSet<>();
-    }
-
-    /**
-     * Generates a name for the Reference containing the last name of the author
-     * and the year.
-     *
-     * @param name
-     * @param fields
-     * @return Generated name used to identify the reference in the bibtex
-     * format.
-     */
-    private static String generateReferenceName(String name, Map<String, String> fields) {
-        String generatedName = "";
-        if (fields.get("author") != null && fields.get("year") != null) {
-            generatedName = fields.get("author");
-            generatedName = generatedName.substring(generatedName.lastIndexOf(" ") + 1);
-            generatedName = generatedName.toLowerCase();
-            String year = fields.get("year");
-            generatedName += year.substring(2);
-        } else {
-            for (String value : fields.values()) {
-                if (value != null) {
-                    generatedName += value.substring(0, Math.min(value.length(), 2));
-                }
-                if (generatedName.length() > 8) {
-                    break;
-                }
-            }
-        }
-
-        return generatedName;
     }
 
     /**
@@ -70,7 +39,7 @@ public class Reference {
     public static Reference createReference(ReferenceType type, String name, Map<String, String> fields) {
         String newName = name;
         if (name.isEmpty()) {
-            newName = generateReferenceName(name, fields);
+            newName = ReferenceUtils.generateReferenceName(name, fields);
         }
         Reference ref = new Reference(type, newName);
         for (String f : type.getRequiredFields()) {
@@ -158,6 +127,10 @@ public class Reference {
             fields.put(key, value);
             return true;
         }
+    }
+    
+    public boolean fieldExists(String field){
+        return fields.containsKey(field);
     }
 
     public String getName() {

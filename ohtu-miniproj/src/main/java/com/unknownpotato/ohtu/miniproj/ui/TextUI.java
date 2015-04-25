@@ -362,7 +362,7 @@ public class TextUI {
     }
 
     /**
-     *
+     * Imports references from the specified JSON file into the program.
      */
     private void loadReferences() {
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
@@ -383,6 +383,9 @@ public class TextUI {
         }
     }
 
+    /**
+     * Exports references from the program into the specified JSON file.
+     */
     private void saveReferences() {
         if (references.getReferences().isEmpty()) {
             io.println("No references found!");
@@ -402,8 +405,15 @@ public class TextUI {
         io.println("References saved successfully!");
     }
 
-    private boolean isFieldInputValid(String field, boolean required, String input) {
-        if (required && input.isEmpty()) {
+    /**
+     * Asks if the user's input to the specified field is valid.
+     *
+     * @param field the specified field
+     * @param canLeaveEmpty can the field be left empty or not
+     * @param input the user's own input to the field
+     */
+    private boolean isFieldInputValid(String field, boolean canLeaveEmpty, String input) {
+        if (!canLeaveEmpty && input.isEmpty()) {
             return false;
         }
         return FieldValidator.validate(field, input);

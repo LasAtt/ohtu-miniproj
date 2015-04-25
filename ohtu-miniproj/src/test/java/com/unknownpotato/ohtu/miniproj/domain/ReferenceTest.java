@@ -67,31 +67,6 @@ public class ReferenceTest {
         assertEquals(4, set.size());
         assertTrue(set.contains("author"));
         assertTrue(set.contains("title"));
-    }
-    
-    @Test
-    public void generateNameForReferenceIfReferenceNameEmpty(){
-        HashMap<String,String> fields = new HashMap<>();
-        fields.put("author", "Author");
-        fields.put("title", "Title");
-        fields.put("year", "1990");
-        fields.put("publisher", "Publisher");
-        ref = Reference.createReference(ReferenceType.BOOK, "", fields);
-        
-        assertEquals("author90", ref.getName());
-    }
-    
-        @Test
-    public void DontGenerateNameForReferenceIfReferenceGiven(){
-        HashMap<String,String> fields = new HashMap<>();
-        fields.put("author", "Author");
-        fields.put("title", "Title");
-        fields.put("year", "1990");
-        fields.put("publisher", "Publisher");
-        ref = Reference.createReference(ReferenceType.BOOK, "Coolname", fields);
-        
-        assertEquals("Coolname", ref.getName());
-    }
-            
+    }           
 
 }
