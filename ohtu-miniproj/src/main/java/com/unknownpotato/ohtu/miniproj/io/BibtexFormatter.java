@@ -16,6 +16,13 @@ import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
  */
 public class BibtexFormatter {
 
+	private static final Map<Character, String> umlauts = new HashMap<>();
+	static {
+		umlauts.put('ä', "{\\\"a}");
+		umlauts.put('ö', "{\\\"o}");
+		umlauts.put('å', "{\\aa}");
+	}
+
 	/**
 	 * Converts a Reference to a String that is in Bibtex format
 	 * 
@@ -25,9 +32,7 @@ public class BibtexFormatter {
 	 * @return String formatted in bibtex format
 	 */
 
-	
 	public static String convertReference(Reference ref) {
-		Map<Character, String> umlauts = createUmlautMap();
 		ReferenceType type = ref.getType();
 
 		StringBuilder builder = new StringBuilder();
@@ -41,32 +46,33 @@ public class BibtexFormatter {
 				.forEach(f -> {
 					builder.append(f);
 					builder.append(" = \"");
-					builder.append(replaceUmlauts(ref.getField(f), umlauts));
+					builder.append(replaceUmlauts(ref.getField(f)));
 					builder.append("\",\n");
 				});
 
 		builder.append("}\n");
 		return builder.toString();
 	}
-	
-	public static String replaceUmlauts(String origin, Map<Character, String> umlauts){
+
+	/**
+	 * Replaces all umlauts with bibtex escapes
+	 * 
+	 * 
+	 * @param origin The String to be converted
+	 * @return a String with all the umlauts replaced with bibtex style escapes.
+	 */
+
+	public static String replaceUmlauts(String origin) {
 		StringBuilder builder = new StringBuilder();
-		Arrays.asList(origin.toCharArray()).forEach(c -> {
-			
-		});
-		
+		for(char c: origin.toCharArray()) {
+			builder.append(umlauts.getOrDefault(c, Character.toString(c)));
+		}
 		return builder.toString();
 	}
-	
-	public static List<String> convertReferences(List<Reference> reflist){
-		return reflist.stream().map(r -> convertReference(r)).collect(Collectors.toList());
+
+	public static List<String> convertReferences(List<Reference> reflist) {
+		return reflist.stream().map(r -> convertReference(r))
+				.collect(Collectors.toList());
 	}
 	
-	public static Map<Character, String> createUmlautMap() {
-		Map<Character, String> umlauts = new HashMap<Character, String>();
-		umlauts.put('ä', "\\\"{a}");
-		umlauts.put('ö', "\\\"{o}");
-		umlauts.put('å', "\\r{a}");
-		return umlauts;
-	}
 }
