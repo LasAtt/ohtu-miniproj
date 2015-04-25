@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Reference class that includes the type of reference and all necessary fields.
  */
-
+@Component
 public class Reference {
 
     private Map<String, String> fields;
@@ -19,7 +21,8 @@ public class Reference {
      */
     private String name; 
     private Set<String> tags;
-
+    
+    @Autowired
     private Reference(ReferenceType type, String name) {
         this.name = name;
         this.type = type;

@@ -1,6 +1,7 @@
 
 package com.unknownpotato.ohtu.miniproj;
 
+import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.References;
 import com.unknownpotato.ohtu.miniproj.io.ConsoleIO;
 import com.unknownpotato.ohtu.miniproj.io.IO;
@@ -17,7 +18,8 @@ public class App {
 //        ApplicationContext ctx = new FileSystemXmlApplicationContext("src/main/resources/spring-context.xml");
 //
 //        References references = ctx.getBean(References.class);
-//        IO io = ctx.getBean(IO.class);
+//        ConsoleIO io = ctx.getBean(ConsoleIO.class);
+//        Reference ref = ctx.getBean(Reference.class);
 //        TextUI textUi = ctx.getBean(TextUI.class);
 
         References references = new References();
