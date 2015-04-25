@@ -28,7 +28,8 @@ public final class ReferenceUtils {
      */
     public static String generateReferenceName(String name, Map<String, String> fields) {
         String generated = "";
-        if (fields.get("author") != null && fields.get("year") != null) {
+        if (fields.get("author") != null && fields.get("year") != null 
+        && !fields.get("author").isEmpty() && !fields.get("year").isEmpty()) {
             return generateNameFromAuthorAndYear(fields);
         } else {
             return generateFailSafeName(fields);
@@ -64,7 +65,7 @@ public final class ReferenceUtils {
 
         generatedName = generatedName.substring(generatedName.lastIndexOf(" ") + 1);
         generatedName = generatedName.toLowerCase();
-        generatedName += fields.get("year").substring(2);
+        generatedName += fields.get("year").substring(Math.min(2, fields.get("year").length()));
 
         return generatedName;
     }
