@@ -19,7 +19,6 @@ public class ConsoleIO implements IO {
      */
     private final List<String> prints;
     
-    @Autowired
     public ConsoleIO() {
         prints = new ArrayList<>();
     }

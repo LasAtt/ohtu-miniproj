@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 /**
  * Reference class that includes the type of reference and all necessary fields.
  */
-@Component
+//@Component
 public class Reference {
 
     private Map<String, String> fields;
@@ -22,7 +22,6 @@ public class Reference {
     private String name; 
     private Set<String> tags;
     
-    @Autowired
     private Reference(ReferenceType type, String name) {
         this.name = name;
         this.type = type;
