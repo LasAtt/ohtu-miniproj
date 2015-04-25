@@ -180,7 +180,8 @@ public class TextUI {
     }
 
     private Reference findReference() {
-        String name = io.readLine("Name the reference to be edited:\n");
+        io.println("Name the reference to be edited");
+        String name = io.readLine(":");
         if (!references.contains(name)) {
             io.println("Reference " + name + " was not found!");
             return null;
@@ -196,7 +197,7 @@ public class TextUI {
         
         Map<String, Consumer<Reference>> editChoices = setUpEditingChoices();
 
-        io.println("[e]dit fields, [a]dd tags, [r]emove tags, [q]uit");
+        io.println("[e]dit fields, [a]dd or edit a single field, [t]ag, [r]emove tags, [q]uit");
         String character = io.readCharacter("(" + ref.getName() + ") ");
 
         if (character.equals("q")) {
@@ -231,9 +232,11 @@ public class TextUI {
     }
 
     private void addOrEditField(Reference ref) {
-        String fieldToEdit = io.readLine("Name the field to be edited/added:\n");
+        io.println("Name the field to be edited/added");
+        String fieldToEdit = io.readLine(":");
         
         if (!ref.getFieldKeys().contains(fieldToEdit)) {
+            io.println("The field " + fieldToEdit + " was not found!");
             return;
         }
         
@@ -294,6 +297,8 @@ public class TextUI {
         fieldKeys.stream().forEach(f -> {
             String oldValue = fields.get(f) != null ? fields.get(f) : "";
             String value = io.readLine(f + " [" + oldValue + "]:");
+            if (value.isEmpty() && !oldValue.isEmpty())
+                value = oldValue;
             while ((!isFieldInputValid(f, canLeaveEmpty, value))) {
                 value =  io.readLine(f + " [" + oldValue + "]:");
             }
@@ -401,6 +406,14 @@ public class TextUI {
             return false;
         }
         return FieldValidator.validate(field, input);
+    }
+    
+    /**
+     * Gets the References-object used. For testing.
+     * @return references
+     */
+    public References getReferences() {
+        return references;
     }
 
 }

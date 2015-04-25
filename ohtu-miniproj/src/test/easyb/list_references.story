@@ -33,6 +33,6 @@ scenario "user can list all added references if there are such references", {
     }
 
     then 'references are listed', {
-       io.getPrints().shouldHave("- author99: { year: 1999 author: author publisher: publisher title: title  }")
+       io.getPrints().shouldHave("Book - author99: [year: 1999 author: author publisher: publisher title: title ]")
     }
 }

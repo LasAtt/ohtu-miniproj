@@ -27,8 +27,8 @@ public final class ReferenceUtils {
      * @return
      */
     public static String generateReferenceName(String name, Map<String, String> fields) {
-        if (fields.get("author") != null && fields.get("year") != null 
-        && !fields.get("author").isEmpty() && !fields.get("year").isEmpty()) {
+        if (fields.get("author") != null && fields.get("year") != null
+                && !fields.get("author").isEmpty() && !fields.get("year").isEmpty()) {
             return generateNameFromAuthorAndYear(fields);
         } else {
             return generateFailSafeName(fields);
@@ -44,7 +44,7 @@ public final class ReferenceUtils {
     private static String generateFailSafeName(Map<String, String> fields) {
         Random r = new Random();
         String generatedName = "";
-        
+
         // append two chars from each field until maximum length
         for (String value : fields.values()) {
             if (value != null && generatedName.length() < 8) {
@@ -52,10 +52,10 @@ public final class ReferenceUtils {
             }
         }
         // append random chars to get length for name
-        while(generatedName.length() < 5){
-            generatedName += (char)(r.nextInt(26) + 'a');
+        while (generatedName.length() < 5) {
+            generatedName += (char) (r.nextInt(26) + 'a');
         }
-        
+
         return generatedName;
     }
 
@@ -68,7 +68,7 @@ public final class ReferenceUtils {
 
         return generatedName;
     }
-    
+
     /**
      * Reads Reference information to String and returns it.
      *
@@ -77,13 +77,20 @@ public final class ReferenceUtils {
      */
     public static String referenceToString(Reference r) {
         StringBuilder sb = new StringBuilder();
-        sb.append(r.getName()).append(" - ").append(r.getType()).append(": [");
+        sb.append(r.getType()).append(" - ").append(r.getName()).append(": [");
         r.getFieldKeys().stream()
                 .forEach(f -> sb.append(f)
                         .append(": ")
                         .append(r.getField(f))
                         .append(" "));
-        return sb.append("]").toString();
+        sb.append("]");
+        if (!r.getTags().isEmpty()) {
+            sb.append("\ntags: ");
+            r.getTags().stream().forEach(t -> {
+                sb.append(t).append(" ");
+            });
+        }
+        return sb.toString();
     }
-    
+
 }
