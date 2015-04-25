@@ -28,7 +28,7 @@ public final class ReferenceUtils {
      */
     public static String generateReferenceName(String name, Map<String, String> fields) {
         String generated = "";
-        if (!fields.get("author").isEmpty() && !fields.get("year").isEmpty()) {
+        if (fields.get("author") != null && fields.get("year") != null) {
             return generateNameFromAuthorAndYear(fields);
         } else {
             return generateFailSafeName(fields);
