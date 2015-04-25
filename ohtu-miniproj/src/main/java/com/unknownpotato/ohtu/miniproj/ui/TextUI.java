@@ -206,7 +206,10 @@ public class TextUI {
 
     private void editReference() {
         Reference ref = findReference();
-
+        if (ref == null) {
+            return;
+        }
+        
         Map<String, Consumer<Reference>> editChoices = setUpEditingChoices();
 
         io.println("[e]dit fields, [a]dd tags, [r]emove tags, [q]uit");
@@ -222,7 +225,8 @@ public class TextUI {
     private Map<String, Consumer<Reference>> setUpEditingChoices() {
         final Map<String, Consumer<Reference>> editingChoices = new HashMap<>();
         editingChoices.put("e", param -> editFields(param));
-        editingChoices.put("a", param -> addTags(param));
+        editingChoices.put("a", param -> addOrEditField(param));
+        editingChoices.put("t", param -> addTags(param));
         editingChoices.put("r", param -> removeTags(param));
         return editingChoices;
     }
@@ -239,24 +243,21 @@ public class TextUI {
         }
 
         
-        references.addReference(ref);
+        ref.editFields(fields);
     }
 
-    private void makeEdit(Reference ref) {
-        boolean fieldWasFound = false;
-        String fieldToEdit = io.readLine("Name the field to be edited:\n");
-        for (String field : ref.getFieldKeys()) {
-            if (field.equals(fieldToEdit)) {
-                fieldWasFound = true;
-                String newFieldContent = io.readLine("Name the new content for this field:\n");
-                ref.editField(field, newFieldContent);
-                io.println("The field " + fieldToEdit + " was edited!");
-            }
+    private void addOrEditField(Reference ref) {
+        String fieldToEdit = io.readLine("Name the field to be edited/added:\n");
+        
+        if (!ref.getFieldKeys().contains(fieldToEdit)) {
+            return;
         }
-        if (fieldWasFound == false) {
-            io.println("The field " + fieldToEdit + " was not found!");
-        }
+        
+        String newFieldContent = io.readLine(fieldToEdit + " [" + ref.getField(fieldToEdit) + "]:");
+        ref.editField(fieldToEdit, newFieldContent);
+        io.println("The field " + fieldToEdit + " was edited!");
     }
+    
 
     /**
      * Exports references to running directory file BibTex_export.bib.
@@ -307,9 +308,10 @@ public class TextUI {
      */
     private void askForFields(List<String> fieldKeys, Map<String, String> fields, boolean canLeaveEmpty) {
         fieldKeys.stream().forEach(f -> {
-            String value = io.readLine(" " + f + ":");
+            String oldValue = fields.get(f) != null ? fields.get(f) : "";
+            String value = io.readLine(f + " [" + oldValue + "]:");
             while ((!isFieldInputValid(f, canLeaveEmpty, value))) {
-                value = io.readLine(" " + f + ":");
+                value =  io.readLine(f + " [" + oldValue + "]:");
             }
             if (!value.isEmpty()) {
                 fields.put(f, value);
