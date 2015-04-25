@@ -69,4 +69,21 @@ public final class ReferenceUtils {
         return generatedName;
     }
     
+    /**
+     * Reads Reference information to String and returns it.
+     *
+     * @param r reference to be converted
+     * @return reference given as String representation.
+     */
+    public static String referenceToString(Reference r) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(r.getName()).append(" - ").append(r.getType()).append(": [");
+        r.getFieldKeys().stream()
+                .forEach(f -> sb.append(f)
+                        .append(": ")
+                        .append(r.getField(f))
+                        .append(" "));
+        return sb.append("]").toString();
+    }
+    
 }

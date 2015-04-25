@@ -4,6 +4,7 @@ package com.unknownpotato.ohtu.miniproj.ui;
 import com.unknownpotato.ohtu.miniproj.domain.FieldValidator;
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
+import com.unknownpotato.ohtu.miniproj.domain.ReferenceUtils;
 import com.unknownpotato.ohtu.miniproj.domain.References;
 import com.unknownpotato.ohtu.miniproj.io.BibtexFormatter;
 import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
@@ -115,9 +116,9 @@ public class TextUI {
     private void addReference() {
         while (true) {
             io.println(listReferenceCreationChoices());
-            String choice = io.readCharacter(":");
+            String choice = io.readLine(":");
             if (!StringUtils.isNumeric(choice)) {
-                if (choice.equals("q")) {
+                if (choice.charAt(0) == 'q') {
                     return;
                 }
             }
@@ -162,25 +163,8 @@ public class TextUI {
         }
         references.getReferences().stream().forEach(r -> {
             io.println("All references:");
-            io.println(referenceToString(r));
+            io.println(ReferenceUtils.referenceToString(r));
         });
-    }
-
-    /**
-     * Reads Reference information to String and returns it.
-     *
-     * @param r reference to be converted
-     * @return reference given as String representation.
-     */
-    private String referenceToString(Reference r) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" - ").append(r.getName()).append(": { ");
-        r.getFieldKeys().stream()
-                .forEach(f -> sb.append(f)
-                        .append(": ")
-                        .append(r.getField(f))
-                        .append(" "));
-        return sb.append(" }").toString();
     }
 
     /**
