@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 /**
  * Reference class that includes the type of reference and all necessary fields.
  */
-//@Component
 public class Reference {
 
     private Map<String, String> fields;

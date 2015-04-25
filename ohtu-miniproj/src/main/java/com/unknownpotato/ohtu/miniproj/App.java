@@ -19,7 +19,6 @@ public class App {
 
         References references = ctx.getBean(References.class);
         ConsoleIO io = ctx.getBean(ConsoleIO.class);
-//        Reference ref = ctx.getBean(Reference.class);
         TextUI textUi = ctx.getBean(TextUI.class);
 
 //        References references = new References();
