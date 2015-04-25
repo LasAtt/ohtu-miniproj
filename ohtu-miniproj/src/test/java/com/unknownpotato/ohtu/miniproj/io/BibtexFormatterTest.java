@@ -19,6 +19,7 @@ public class BibtexFormatterTest {
     Reference BookRef;
     Reference ArticleRef;
     Reference InproceedingsRef;
+    Reference UmlautRef;
 
     @Before
     public void setUp() {
@@ -30,19 +31,26 @@ public class BibtexFormatterTest {
         BookRef = Reference.createReference(ReferenceType.BOOK, "Bankowski2051", fields);
         
         fields = new HashMap<String, String>();
-        fields.put("author", "Axel Wikström");
+        fields.put("author", "Axel Wikstrom");
         fields.put("title", "how the term BINARY!!! is really stupid");
         fields.put("journal", "Some fukken IEEE thingy");
         fields.put("year", "2050");
         fields.put("volume", "12");
-        ArticleRef = Reference.createReference(ReferenceType.ARTICLE, "Wikström2050", fields);
+        ArticleRef = Reference.createReference(ReferenceType.ARTICLE, "Wikstrom2050", fields);
         
         fields = new HashMap<String, String>();
         fields.put("author", "Atte Lassila");
-        fields.put("title", "Voxi tekee rumia testejä");
-        fields.put("booktitle", "Kuinka tehdä hyvät testit");
+        fields.put("title", "Voxi tekee rumia testeja");
+        fields.put("booktitle", "Kuinka tehda hyvat testit");
         fields.put("year", "2049");
         InproceedingsRef = Reference.createReference(ReferenceType.INPROCEEDINGS, "Lassila:49", fields);
+        
+        fields = new HashMap<String, String>();
+        fields.put("author", "Victör Bankowski");
+        fields.put("title", "a Dive intö the Rust Progrämming Languäge");
+        fields.put("publisher", "Unknownpotatå publishing");
+        fields.put("year", "2051");
+        UmlautRef = Reference.createReference(ReferenceType.BOOK, "VBankowski2051", fields);
     }
     
     private Set<String> createCompareSet(ReferenceType type) {
@@ -56,7 +64,7 @@ public class BibtexFormatterTest {
 		        lines.add("title = \"a Dive into the Rust Programming Language\",");
 		        break;
 			case ARTICLE:
-				lines.add("author = \"Axel Wikström\",");
+				lines.add("author = \"Axel Wikstrom\",");
 				lines.add("title = \"how the term BINARY!!! is really stupid\",");
 				lines.add("journal = \"Some fukken IEEE thingy\",");
 				lines.add("year = \"2050\",");
@@ -64,8 +72,8 @@ public class BibtexFormatterTest {
 				break;
 			case INPROCEEDINGS:
 				lines.add("author = \"Atte Lassila\",");
-				lines.add("title = \"Voxi tekee rumia testejä\",");
-				lines.add("booktitle = \"Kuinka tehdä hyvät testit\",");
+				lines.add("title = \"Voxi tekee rumia testeja\",");
+				lines.add("booktitle = \"Kuinka tehda hyvat testit\",");
 				lines.add("year = \"2049\",");
 				break;
 		}
@@ -74,15 +82,13 @@ public class BibtexFormatterTest {
 		return lines;
 	}
 
-    @Test
-    public void bookReferenceOutputIsCorrectWithMandatoryFieldsTest() {
-    	String formatted = BibtexFormatter.convertReference(BookRef);
-        Scanner scanner = new Scanner(formatted);
-
-        assertEquals("@Book{Bankowski2051,", scanner.nextLine());
-        Set<String> lines = createCompareSet(BookRef.getType());
-
-        analyzeLines(scanner, lines);
+    private Set<String> createUmlautCompareSet() {
+    	Set<String> lines = new HashSet<String>();
+    	lines.add("year = \"2051\",");
+        lines.add("publisher = \"Unknownpotat{\\aa} publishing\",");
+        lines.add("author = \"Vict{\\\"o}r Bankowski\",");
+        lines.add("title = \"a Dive int{\\\"o} the Rust Progr{\\\"a}mming Langu{\\\"a}ge\",");
+        return lines;
     }
 
 	private void analyzeLines(Scanner scanner, Set<String> lines) {
@@ -102,14 +108,23 @@ public class BibtexFormatterTest {
         fail("Too few lines");
 	}
 
-	
+	@Test
+    public void bookReferenceOutputIsCorrectWithMandatoryFieldsTest() {
+    	String formatted = BibtexFormatter.convertReference(BookRef);
+        Scanner scanner = new Scanner(formatted);
+
+        assertEquals("@Book{Bankowski2051,", scanner.nextLine());
+        Set<String> lines = createCompareSet(BookRef.getType());
+
+        analyzeLines(scanner, lines);
+    }	
     
     @Test
     public void articleReferenceOutputIsCorrectWithMandatoryFieldsTest() {
     	String formatted = BibtexFormatter.convertReference(ArticleRef);
         Scanner scanner = new Scanner(formatted);
 
-        assertEquals("@Article{Wikström2050,", scanner.nextLine());
+        assertEquals("@Article{Wikstrom2050,", scanner.nextLine());
         Set<String> lines = createCompareSet(ArticleRef.getType());
 
         analyzeLines(scanner, lines);
@@ -124,6 +139,31 @@ public class BibtexFormatterTest {
     	Set<String> lines = createCompareSet(InproceedingsRef.getType());
     	
     	analyzeLines(scanner, lines);
+    }
+    
+    @Test
+    public void umlautReferenceIsCorrect() {
+    	String formatted = BibtexFormatter.convertReference(UmlautRef);
+    	Scanner scanner = new Scanner(formatted);
+    	
+    	assertEquals("@Book{VBankowski2051,", scanner.nextLine());
+    	Set<String> lines = createUmlautCompareSet();
+    	
+    	analyzeLines(scanner, lines);
+    }
+    
+    @Test
+    public void umlautsAreReplacedWhenStringContainsThem(){
+    	String escaped = BibtexFormatter.replaceUmlauts("jääkökkä åmena");
+    	assertEquals("j{\\\"a}{\\\"a}k{\\\"o}kk{\\\"a} {\\aa}mena", escaped);	
+    }
+    
+    @Test
+    public void nothingIsDoneToaStringIfThereAreNoUmlauts(){
+    	String nonumlauted = "this string contains no umlauts";
+    	String escaped = BibtexFormatter.replaceUmlauts(nonumlauted);
+    	assertEquals(nonumlauted, escaped);
+    	assertEquals("this string contains no umlauts", escaped);
     }
 
 }
