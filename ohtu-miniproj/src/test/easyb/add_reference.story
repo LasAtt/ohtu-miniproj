@@ -184,3 +184,94 @@ scenario "user can add a correctly formatted mastersthesis type reference", {
        references.getReferences().size().shouldBe 1
     }
 }
+
+scenario "user can add a correctly formatted misc type reference", {
+    given 'reference add attempt', {
+        references = new References()
+        
+        io = new StubIO("a", "10", "n", "q")
+        ui = new TextUI(references, io)
+    }
+
+    when 'valid reference information is entered', {
+       ui.run()
+    }
+
+    then 'new reference has been added', {
+       io.getPrints().shouldHave("You have added a new reference!\n")
+       references.getReferences().size().shouldBe 1
+    }
+}
+
+
+scenario "user can add a correctly formatted phdthesis type reference", {
+    given 'reference add attempt', {
+        references = new References()
+        
+        io = new StubIO("a", "11", "author", "title", "school", "1999", "n", "q")
+        ui = new TextUI(references, io)
+    }
+
+    when 'valid reference information is entered', {
+       ui.run()
+    }
+
+    then 'new reference has been added', {
+       io.getPrints().shouldHave("You have added a new reference!\n")
+       references.getReferences().size().shouldBe 1
+    }
+}
+
+scenario "user can add a correctly formatted proceedings type reference", {
+    given 'reference add attempt', {
+        references = new References()
+        
+        io = new StubIO("a", "12", "title", "1999", "n", "q")
+        ui = new TextUI(references, io)
+    }
+
+    when 'valid reference information is entered', {
+       ui.run()
+    }
+
+    then 'new reference has been added', {
+       io.getPrints().shouldHave("You have added a new reference!\n")
+       references.getReferences().size().shouldBe 1
+    }
+}
+
+scenario "user can add a correctly formatted techreport type reference", {
+    given 'reference add attempt', {
+        references = new References()
+        
+        io = new StubIO("a", "13", "author", "title", "institution", "1999", "n", "q")
+        ui = new TextUI(references, io)
+    }
+
+    when 'valid reference information is entered', {
+       ui.run()
+    }
+
+    then 'new reference has been added', {
+       io.getPrints().shouldHave("You have added a new reference!\n")
+       references.getReferences().size().shouldBe 1
+    }
+}
+
+scenario "user can add a correctly formatted unpublished type reference", {
+    given 'reference add attempt', {
+        references = new References()
+        
+        io = new StubIO("a", "14", "author", "title", "note", "n", "q")
+        ui = new TextUI(references, io)
+    }
+
+    when 'valid reference information is entered', {
+       ui.run()
+    }
+
+    then 'new reference has been added', {
+       io.getPrints().shouldHave("You have added a new reference!\n")
+       references.getReferences().size().shouldBe 1
+    }
+}
