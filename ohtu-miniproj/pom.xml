@@ -11,7 +11,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <easyb.version>1.5</easyb.version>
         <cobertura.version>2.7</cobertura.version>
-        <org.springframework.version>3.1.1.RELEASE</org.springframework.version>
+        <org.springframework.version>4.1.4.RELEASE</org.springframework.version>
     </properties>
     
     <dependencies>
@@ -49,7 +49,8 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${org.springframework.version}</version>
+            <version>3.1.1.RELEASE</version>
+            <type>jar</type>
         </dependency>
 
         <dependency>
@@ -61,7 +62,8 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>${org.springframework.version}</version>
+            <version>3.1.1.RELEASE</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

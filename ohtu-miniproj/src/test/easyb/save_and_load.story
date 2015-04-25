@@ -24,7 +24,7 @@ scenario "user can't export when there are no references", {
 scenario "user can export the references to a JSON file when there are references and import them back", {
     given 'export and import attempt', {
        references = new References()
-       io = new StubIO("add", "0", "test testitys", "title", "1999", "publisher", "no", "s", "", "d", "testitys99", "o", "", "l", "quit")
+       io = new StubIO("add", "0", "test testitys", "title", "1999", "publisher", "no", "s", "", "d", "testitys99", "o", "", "quit")
        ui = new TextUI(references, io)
     }
 
@@ -33,6 +33,8 @@ scenario "user can export the references to a JSON file when there are reference
     }
 
     then 'the import is completed', {
-       io.getPrints().shouldHave("- testitys99: { year: 1999 author: test testitys publisher: publisher title: title  }")
+        references = ui.getReferences();
+        references.getReferences().size().shouldBe 1
+        references.getReference("testitys99").shouldNotBe null
     }
 }

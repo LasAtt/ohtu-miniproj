@@ -1,13 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.unknownpotato.ohtu.miniproj.ui;
 
 import com.unknownpotato.ohtu.miniproj.domain.FieldValidator;
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
+import com.unknownpotato.ohtu.miniproj.domain.ReferenceUtils;
 import com.unknownpotato.ohtu.miniproj.domain.References;
 import com.unknownpotato.ohtu.miniproj.io.BibtexFormatter;
 import com.unknownpotato.ohtu.miniproj.io.FileWriterHandler;
@@ -20,6 +17,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -37,7 +35,7 @@ public class TextUI {
     /**
      * Handles reading input and writing output for the class.
      */
-    private IO io;
+    private final IO io;
     /**
      * References handles the references stored in memory.
      */
@@ -63,7 +61,7 @@ public class TextUI {
         Map<String, Runnable> choices = setUpChoices();
         io.println("Welcome to BibTeX-reference formatter!");
         while (true) {
-            listCommands();
+            io.println("Input help to see commands");
             String choice = io.readCharacter(":");
             choice = choice.toLowerCase();
 
@@ -85,7 +83,7 @@ public class TextUI {
      * @return hashmap with the choices.
      */
     private Map<String, Runnable> setUpChoices() {
-        Map<String, Runnable> choices = new HashMap<>();
+        final Map<String, Runnable> choices = new HashMap<>();
         choices.put("h", () -> listCommands());
         choices.put("a", () -> addReference());
         choices.put("l", () -> listReferences());
@@ -101,14 +99,14 @@ public class TextUI {
      * Prints list of commands
      */
     private void listCommands() {
-        io.println("[A]dd new reference, "
-                + "[L]ist all references, "
-                + "[E]dit a reference, "
+        io.println("[A]dd new reference,\n"
+                + "[L]ist all references,\n"
+                + "[E]dit a reference,\n"
                 + "[D]elete a reference,\n"
-                + "e[X]port to BibTeX, "
-                + "[S]ave references JSON file, "
-                + "[O]pen references JSON file, "
-                + "[Q]uit");
+                + "e[X]port to BibTeX,\n"
+                + "[S]ave references JSON file,\n"
+                + "[O]pen references JSON file,\n"
+                + "[Q]uit\n");
     }
 
     /**
@@ -118,9 +116,9 @@ public class TextUI {
     private void addReference() {
         while (true) {
             io.println(listReferenceCreationChoices());
-            String choice = io.readCharacter(":");
+            String choice = io.readLine(":");
             if (!StringUtils.isNumeric(choice)) {
-                if (choice.equals("q")) {
+                if (choice.charAt(0) == 'q') {
                     return;
                 }
             }
@@ -147,7 +145,9 @@ public class TextUI {
         sb.append("Give reference type (");
         int i[] = {0};
         Arrays.asList(ReferenceType.values()).stream().forEach(t -> {
-            sb.append(i[0]++).append("=").append(t.name().toLowerCase()).append(", ");
+            sb.append(i[0]++).append("=")
+                    .append(t.name().toLowerCase())
+                    .append(", ");
         });
         sb.append("q=quit)");
         return sb.toString();
@@ -163,25 +163,8 @@ public class TextUI {
         }
         references.getReferences().stream().forEach(r -> {
             io.println("All references:");
-            io.println(referenceToString(r));
+            io.println(ReferenceUtils.referenceToString(r));
         });
-    }
-
-    /**
-     * Reads Reference information to String and returns it.
-     *
-     * @param r reference to be converted
-     * @return reference given as String representation.
-     */
-    private String referenceToString(Reference r) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" - ").append(r.getName()).append(": { ");
-        r.getFieldKeys().stream()
-                .forEach(f -> sb.append(f)
-                        .append(": ")
-                        .append(r.getField(f))
-                        .append(" "));
-        return sb.append(" }").toString();
     }
 
     /**
@@ -196,34 +179,75 @@ public class TextUI {
         }
     }
 
-    private void editReference() {
-        String name = io.readLine("Name the reference to be edited:\n");
+    private Reference findReference() {
+        io.println("Name the reference to be edited");
+        String name = io.readLine(":");
         if (!references.contains(name)) {
             io.println("Reference " + name + " was not found!");
+            return null;
+        }
+        return references.getReference(name);
+    }
+
+    private void editReference() {
+        Reference ref = findReference();
+        if (ref == null) {
             return;
         }
-        Reference ref = references.getReference(name);
-        makeEdit(ref);
+        
+        Map<String, Consumer<Reference>> editChoices = setUpEditingChoices();
+
+        io.println("[e]dit fields, [a]dd or edit a single field, [t]ag, [r]emove tags, [q]uit");
+        String character = io.readCharacter("(" + ref.getName() + ") ");
+
+        if (character.equals("q")) {
+            return;
+        }
+
+        editChoices.get(character).accept(ref);
     }
 
-    private void makeEdit(Reference ref) {
-        boolean fieldWasFound = false;
-        String fieldToEdit = io.readLine("Name the field to be edited:\n");
-        for (String field : ref.getFieldKeys()) {
-            if (field.equals(fieldToEdit)) {
-                fieldWasFound = true;
-                String newFieldContent = io.readLine("Name the new content for this field:\n");
-                ref.editField(field, newFieldContent);
-                io.println("The field " + fieldToEdit + " was edited!");
-            }
-        }
-        if (fieldWasFound == false) {
-            io.println("The field " + fieldToEdit + " was not found!");
-        }
+    private Map<String, Consumer<Reference>> setUpEditingChoices() {
+        final Map<String, Consumer<Reference>> editingChoices = new HashMap<>();
+        editingChoices.put("e", param -> editFields(param));
+        editingChoices.put("a", param -> addOrEditField(param));
+        editingChoices.put("t", param -> addTags(param));
+        editingChoices.put("r", param -> removeTags(param));
+        return editingChoices;
     }
+
+    private void editFields(Reference ref) {
+        Map<String, String> fields = ref.getFields();
+
+        io.println("Fill required fields");
+        askForFields(Arrays.asList(ref.getType().getRequiredFields()), fields, false);
+
+        if (getPermission("Fill optional fields? ([Y]es/[N]o):")) {
+            io.println("Fill optional fields, press enter to leave field empty.");
+            askForFields(Arrays.asList(ref.getType().getOptionalFields()), fields, true);
+        }
+
+        
+        ref.editFields(fields);
+    }
+
+    private void addOrEditField(Reference ref) {
+        io.println("Name the field to be edited/added");
+        String fieldToEdit = io.readLine(":");
+        
+        if (!ref.getFieldKeys().contains(fieldToEdit)) {
+            io.println("The field " + fieldToEdit + " was not found!");
+            return;
+        }
+        
+        String newFieldContent = io.readLine(fieldToEdit + " [" + ref.getField(fieldToEdit) + "]:");
+        ref.editField(fieldToEdit, newFieldContent);
+        io.println("The field " + fieldToEdit + " was edited!");
+    }
+    
 
     /**
-     * Exports references to running directory file BibTex_export.bib
+     * Exports references to running directory file BibTex_export.bib.
      */
     private void exportToBibTex() {
         if (references.getReferences().isEmpty()) {
@@ -236,7 +260,6 @@ public class TextUI {
                     .map(r -> BibtexFormatter.convertReference(r))
                     .collect(Collectors.toList()));
         } catch (IOException ex) {
-            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
             io.println("Export failed!");
             return;
         }
@@ -272,10 +295,12 @@ public class TextUI {
      */
     private void askForFields(List<String> fieldKeys, Map<String, String> fields, boolean canLeaveEmpty) {
         fieldKeys.stream().forEach(f -> {
-            String value = io.readLine(" " + f + ":");
-            while ((!canLeaveEmpty && value.isEmpty())
-                    || (f.equals("year") && (!StringUtils.isNumeric(value) || value.length() < 2))) {
-                value = io.readLine(" " + f + ":");
+            String oldValue = fields.get(f) != null ? fields.get(f) : "";
+            String value = io.readLine(f + " [" + oldValue + "]:");
+            if (value.isEmpty() && !oldValue.isEmpty())
+                value = oldValue;
+            while ((!isFieldInputValid(f, canLeaveEmpty, value))) {
+                value =  io.readLine(f + " [" + oldValue + "]:");
             }
             if (!value.isEmpty()) {
                 fields.put(f, value);
@@ -303,6 +328,11 @@ public class TextUI {
         ref.removeTag(readTags());
     }
 
+    /**
+     * Read tags to be added/removed from input.
+     *
+     * @return tags read from input
+     */
     private String[] readTags() {
         String input = io.readLine(": ");
         return input.split(" ");
@@ -321,32 +351,36 @@ public class TextUI {
     }
 
     /**
-     *
+     * Imports references from the specified JSON file into the program.
      */
     private void loadReferences() {
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
-        
-        try {
-            references = JSONReader.loadReferences(filename);
-        } catch (FileNotFoundException ex) {
-            io.println("File not found!");
-        } catch (JSONException ex) {
-            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (references.getReferences().isEmpty())
-            io.println("No references loaded!");
+            try {
+                references = JSONReader.loadReferences(filename);
+            } catch (FileNotFoundException ex) {
+                io.println("File not found!");
+            } catch (JSONException ex) {
+                Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (references.getReferences().isEmpty()) {
+                io.println("No references loaded!");
+            }
         } else {
             io.println("References loaded successfully!");
         }
     }
 
+    /**
+     * Exports references from the program into the specified JSON file.
+     */
     private void saveReferences() {
         if (references.getReferences().isEmpty()) {
             io.println("No references found!");
             return;
         }
+
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
@@ -360,11 +394,26 @@ public class TextUI {
         io.println("References saved successfully!");
     }
 
-    private boolean isFieldInputValid(String field, boolean required, String input) {
-        if (required && input.isEmpty()) {
+    /**
+     * Asks if the user's input to the specified field is valid.
+     *
+     * @param field the specified field
+     * @param canLeaveEmpty can the field be left empty or not
+     * @param input the user's own input to the field
+     */
+    private boolean isFieldInputValid(String field, boolean canLeaveEmpty, String input) {
+        if (!canLeaveEmpty && input.isEmpty()) {
             return false;
         }
         return FieldValidator.validate(field, input);
+    }
+    
+    /**
+     * Gets the References-object used. For testing.
+     * @return references
+     */
+    public References getReferences() {
+        return references;
     }
 
 }

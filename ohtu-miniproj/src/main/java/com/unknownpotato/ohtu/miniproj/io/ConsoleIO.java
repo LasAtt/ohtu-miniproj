@@ -5,6 +5,7 @@ import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,7 +18,7 @@ public class ConsoleIO implements IO {
      * History of prints made with this IO.
      */
     private final List<String> prints;
-
+    
     public ConsoleIO() {
         prints = new ArrayList<>();
     }

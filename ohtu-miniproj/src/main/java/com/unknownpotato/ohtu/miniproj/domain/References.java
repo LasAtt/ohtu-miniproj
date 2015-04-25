@@ -7,6 +7,9 @@ package com.unknownpotato.ohtu.miniproj.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,9 +19,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class References {
     private List<Reference> refs;
+    private List<Predicate<Reference>> filters;
     
     public References() {
         refs = new ArrayList();
+        filters = new ArrayList();
     }
     
     public void addReference(Reference r) {
@@ -42,7 +47,19 @@ public class References {
     }
 
     public List<Reference> getReferences() {
-        return refs;
+        Stream<Reference> s = refs.stream();
+        for (Predicate<Reference> filter : filters) {
+            s = s.filter(filter);
+        }
+        return s.collect(Collectors.toList());
+    }
+    
+    public void addFilter(Predicate<Reference> f) {
+        filters.add(f);
+    }
+    
+    public void clearFilters() {
+        filters.clear();
     }
     
     public boolean contains(String name) {
