@@ -424,7 +424,7 @@ public class TextUI {
         if (!canLeaveEmpty && input.isEmpty()) {
             return false;
         }
-        return FieldValidator.validate(field, input);
+        return FieldValidator.validate(field, canLeaveEmpty, input);
     }
 
     private void manageFilters() {
