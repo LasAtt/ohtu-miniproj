@@ -55,7 +55,7 @@ public class ReferencesTest {
     public void typeFilterTest() {
         refs.addReference(ref);
         refs.addReference(articleRef);
-        refs.addFilter(ReferenceFilters.isType(ReferenceType.BOOK));
+        refs.addFilter(ReferenceFilters.isOfType(ReferenceType.BOOK));
         
         assertEquals(1, refs.getReferences().size());
         
@@ -82,7 +82,7 @@ public class ReferencesTest {
         refs.addReference(articleRef);
         articleRef.addTag("binary");
         refs.addFilter(ReferenceFilters.hasTag("binary"));
-        refs.addFilter(ReferenceFilters.isType(ReferenceType.ARTICLE));
+        refs.addFilter(ReferenceFilters.isOfType(ReferenceType.ARTICLE));
         
         assertEquals(1, refs.getReferences().size());
         assertTrue(refs.getReferences().contains(articleRef));

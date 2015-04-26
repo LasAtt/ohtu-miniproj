@@ -1,8 +1,8 @@
-
 package com.unknownpotato.ohtu.miniproj.ui;
 
 import com.unknownpotato.ohtu.miniproj.domain.FieldValidator;
 import com.unknownpotato.ohtu.miniproj.domain.Reference;
+import com.unknownpotato.ohtu.miniproj.domain.ReferenceFilters;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceType;
 import com.unknownpotato.ohtu.miniproj.domain.ReferenceUtils;
 import com.unknownpotato.ohtu.miniproj.domain.References;
@@ -13,11 +13,16 @@ import com.unknownpotato.ohtu.miniproj.io.JSONReader;
 import com.unknownpotato.ohtu.miniproj.io.JSONWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -89,6 +94,7 @@ public class TextUI {
         choices.put("l", () -> listReferences());
         choices.put("e", () -> editReference());
         choices.put("d", () -> deleteReference());
+        choices.put("f", () -> manageFilters());
         choices.put("x", () -> exportToBibTex());
         choices.put("s", () -> saveReferences());
         choices.put("o", () -> loadReferences());
@@ -103,6 +109,7 @@ public class TextUI {
                 + "[L]ist all references,\n"
                 + "[E]dit a reference,\n"
                 + "[D]elete a reference,\n"
+                + "[F]ilter references,\n"
                 + "e[X]port to BibTeX,\n"
                 + "[S]ave references JSON file,\n"
                 + "[O]pen references JSON file,\n"
@@ -114,25 +121,9 @@ public class TextUI {
      * reference to IO.
      */
     private void addReference() {
-        while (true) {
-            io.println(listReferenceCreationChoices());
-            String choice = io.readLine(":");
-            if (!StringUtils.isNumeric(choice)) {
-                if (choice.charAt(0) == 'q') {
-                    return;
-                }
-            }
-            int i = Integer.parseInt(choice);
-            if (i < 0 || i >= ReferenceType.values().length) {
-                io.println("Invalid choice");
-                continue;
-            }
-
-            createNewReference(ReferenceType.values()[i]);
-            io.println("You have added a new reference!");
-
-            return;
-        }
+        ReferenceType type = chooseReferenceType();
+        createNewReference(type);
+        io.println("You have added a new reference!");
     }
 
     /**
@@ -140,23 +131,41 @@ public class TextUI {
      *
      * @return choices as string.
      */
-    private String listReferenceCreationChoices() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("Give reference type (");
-        int i[] = {0};
-        Arrays.asList(ReferenceType.values()).stream().forEach(t -> {
-            sb.append(i[0]++).append("=")
-                    .append(t.name().toLowerCase())
-                    .append(", ");
-        });
-        sb.append("q=quit)");
-        return sb.toString();
+    private void listAvailibleReferenceTypes() {
+        io.println("Give reference type:");
+        for (int i = 0; i < ReferenceType.values().length; i++) {
+            io.print(i + "=" + ReferenceType.values()[i].toString() + " ");
+            if ((i + 1) % 4 == 0){
+                io.print("\n");
+            }
+        }
+        io.println("\n");
+    }
+
+    private ReferenceType chooseReferenceType() {
+        listAvailibleReferenceTypes();
+        while (true) {
+            int i = io.readInt(":");
+            if (i < 0 || i >= ReferenceType.values().length) {
+                io.println("Invalid choice");
+                continue;
+            }
+            return ReferenceType.values()[i];
+        }
     }
 
     /**
      * Prints all references stored in references-object.
      */
     private void listReferences() {
+        if (!references.getFilters().isEmpty()) {
+            int filters = references.getFilters().size();
+            if (filters == 1) {
+                io.println(filters + " filter applied");
+            } else {
+                io.println(filters + " filters applied");
+            }
+        }
         if (references.getReferences().isEmpty()) {
             io.println("No references found!");
             return;
@@ -194,7 +203,7 @@ public class TextUI {
         if (ref == null) {
             return;
         }
-        
+
         Map<String, Consumer<Reference>> editChoices = setUpEditingChoices();
 
         io.println("[e]dit fields, [a]dd or edit a single field, [t]ag, [r]emove tags, [q]uit");
@@ -227,24 +236,22 @@ public class TextUI {
             askForFields(Arrays.asList(ref.getType().getOptionalFields()), fields, true);
         }
 
-        
         ref.editFields(fields);
     }
 
     private void addOrEditField(Reference ref) {
         io.println("Name the field to be edited/added");
         String fieldToEdit = io.readLine(":");
-        
+
         if (!ref.getFieldKeys().contains(fieldToEdit)) {
             io.println("The field " + fieldToEdit + " was not found!");
             return;
         }
-        
+
         String newFieldContent = io.readLine(fieldToEdit + " [" + ref.getField(fieldToEdit) + "]:");
         ref.editField(fieldToEdit, newFieldContent);
         io.println("The field " + fieldToEdit + " was edited!");
     }
-    
 
     /**
      * Exports references to running directory file BibTex_export.bib.
@@ -297,10 +304,11 @@ public class TextUI {
         fieldKeys.stream().forEach(f -> {
             String oldValue = fields.get(f) != null ? fields.get(f) : "";
             String value = io.readLine(f + " [" + oldValue + "]:");
-            if (value.isEmpty() && !oldValue.isEmpty())
+            if (value.isEmpty() && !oldValue.isEmpty()) {
                 value = oldValue;
+            }
             while ((!isFieldInputValid(f, canLeaveEmpty, value))) {
-                value =  io.readLine(f + " [" + oldValue + "]:");
+                value = io.readLine(f + " [" + oldValue + "]:");
             }
             if (!value.isEmpty()) {
                 fields.put(f, value);
@@ -407,9 +415,94 @@ public class TextUI {
         }
         return FieldValidator.validate(field, input);
     }
-    
+
+    private void manageFilters() {
+        while (true) {
+            if (references.getFilters().isEmpty()) {
+                io.println("No filters applied");
+            } else {
+                io.println("Currelty applied filters:");
+                listFilters();
+            }
+            io.println("[a]dd filter, [c]lear filters, [q]uit");
+            String choice = io.readCharacter(": ");
+            switch (choice.toLowerCase()) {
+                case "a":
+                    addFilter();
+                    break;
+                case "c":
+                    clearFilters();
+                    break;
+                case "q":
+                    return;
+                default:
+                    io.println("Invalid choice!");
+                    break;
+            }
+        }
+    }
+
+    public void listFilters() {
+        references.getFilters().stream().forEach((p) -> {
+            io.println(p.toString());
+        });
+    }
+
+    public Method[] getAvailibleFilters() {
+        Class fc = ReferenceFilters.class;
+        return fc.getDeclaredMethods();
+    }
+
+    public void listAvailibleFilters() {
+        Method[] filters = getAvailibleFilters();
+        for (int i = 0; i < filters.length; i++) {
+            io.println(i + "=" + filters[i].getName());
+        }
+    }
+
+    private Method chooseFilter() {
+        io.println("Choose filter:");
+        listAvailibleFilters();
+        while (true) {
+            int i = io.readInt(":");
+            if (i < 0 || i >= getAvailibleFilters().length) {
+                io.println("Invalid choice");
+                continue;
+            }
+            return getAvailibleFilters()[i];
+        }
+    }
+
+    private Object[] readFilterParameters(Method filter) {
+        Parameter[] params = filter.getParameters();
+        ArrayList<Object> rp = new ArrayList<>();
+        for (Parameter param : params) {
+            if (param.getType() == String.class) {
+                rp.add(io.readLine(param.getName() + ":"));
+            } else if (param.getType() == ReferenceType.class) {
+                rp.add(chooseReferenceType());
+            }
+        }
+        return rp.toArray();
+    }
+
+    private void addFilter() {
+        Method filter = chooseFilter();
+        try {
+            references.addFilter((Predicate<Reference>) filter.invoke(null, readFilterParameters(filter)));
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void clearFilters() {
+        references.clearFilters();
+        io.println("Filters cleared!");
+    }
+
     /**
      * Gets the References-object used. For testing.
+     *
      * @return references
      */
     public References getReferences() {

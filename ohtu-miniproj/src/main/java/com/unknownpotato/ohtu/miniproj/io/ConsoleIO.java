@@ -34,7 +34,17 @@ public class ConsoleIO implements IO {
     public int readInt(String prompt) {
         Scanner scanner = new Scanner(in);
         print(prompt + " ");
-        return Integer.parseInt(scanner.nextLine());
+        while (true) {
+            int i;
+            try {
+            i = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e){
+                println("Invalid number!");
+                print(prompt + " ");
+                continue;
+            }
+            return i;
+        }
     }
 
     @Override

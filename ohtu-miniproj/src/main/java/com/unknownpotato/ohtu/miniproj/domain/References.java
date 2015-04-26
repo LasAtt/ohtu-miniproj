@@ -58,6 +58,10 @@ public class References {
         filters.add(f);
     }
     
+    public List<Predicate<Reference>> getFilters() {
+        return filters;
+    }
+    
     public void clearFilters() {
         filters.clear();
     }

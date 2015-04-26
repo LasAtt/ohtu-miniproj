@@ -12,12 +12,34 @@ import java.util.function.Predicate;
  * @author axwikstr
  */
 public class ReferenceFilters{
-    public static Predicate<Reference> isType(ReferenceType type) {
-        return r -> r.getType() == type;
+    public static Predicate<Reference> isOfType(ReferenceType type) {
+        return new Predicate<Reference>() {
+
+            @Override
+            public boolean test(Reference r) {
+                return r.getType() == type;
+            }
+
+            @Override
+            public String toString() {
+                return "Is of type " + type.toString();
+            }
+        };
     }
     
     public static Predicate<Reference> hasTag(String tag) {
-        return r -> r.getTags().contains(tag);
+        return new Predicate<Reference>() {
+
+            @Override
+            public boolean test(Reference r) {
+                return r.getTags().contains(tag);
+            }
+
+            @Override
+            public String toString() {
+                return "Has tag " + tag;
+            }
+        };
     }
     
 }
