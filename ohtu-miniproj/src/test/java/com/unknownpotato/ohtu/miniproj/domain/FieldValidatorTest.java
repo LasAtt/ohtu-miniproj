@@ -24,15 +24,23 @@ public class FieldValidatorTest {
 
     @Test
     public void nonNumericInputNotAcceptedWhenNumericInputRequired() {
-        boolean result = FieldValidator.validate("year", "199S");
+        boolean result = FieldValidator.validate("year", false, "199S");
         assertTrue(!result);
-        boolean result2 = FieldValidator.validate("chapter", "199S");
+        boolean result2 = FieldValidator.validate("chapter", false, "199S");
         assertTrue(!result2);
     }
     
     @Test
+    public void canLeaveOptionalYearAndChapterFieldsEmpty() {
+        boolean result = FieldValidator.validate("year", true, "");
+        assertTrue(result);
+        boolean result2 = FieldValidator.validate("chapter", true, "");
+        assertTrue(result2);
+    }
+    
+    @Test
     public void yearInputNotAcceptedIfTooShort() {
-        boolean result = FieldValidator.validate("year", "19");
+        boolean result = FieldValidator.validate("year", false, "19");
         assertTrue(!result);
     }
 }
