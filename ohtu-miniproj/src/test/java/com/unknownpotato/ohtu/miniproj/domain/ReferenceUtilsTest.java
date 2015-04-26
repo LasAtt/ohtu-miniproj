@@ -20,7 +20,7 @@ public class ReferenceUtilsTest {
 
     @Test
     public void nameGeneratorTakesValuesFromFieldsIfNoAuthorOrYearValuesExist() {
-        HashMap<String, String> fields = new HashMap<String, String>();
+        HashMap<String, String> fields = new HashMap<>();
         fields.put("author", "");
         fields.put("title", "Title");
         fields.put("year", "1990");
@@ -33,14 +33,26 @@ public class ReferenceUtilsTest {
     
     @Test
     public void nameGeneratorAppendsRandomCharactersIfNameTooShortAfterGenerating() {
-        HashMap<String, String> fields = new HashMap<String, String>();
+        HashMap<String, String> fields = new HashMap<>();
         fields.put("author", "");
         fields.put("title", "T");
         fields.put("year", "1");
         fields.put("publisher", "Pu");
         Reference ref = Reference.createReference(ReferenceType.BOOK, "", fields);
-        System.out.println(ref.getName());
+        
         assertFalse(ref.getName().equals("1TPu"));
+    }
+    
+    @Test
+    public void nameGeneratorRemovesUmlautsFromName(){
+        HashMap<String, String> fields = new HashMap<>();
+        fields.put("author", "åöåöä");
+        fields.put("title", "gagagaga");
+        fields.put("year", "1990");
+        fields.put("publisher", "Pu");
+        Reference ref = Reference.createReference(ReferenceType.BOOK, "", fields);
+        System.out.println(ref.getName());
+        assertEquals("aoaoae90", ref.getName());
     }
 
     @Test
@@ -51,7 +63,7 @@ public class ReferenceUtilsTest {
         fields.put("year", "1990");
         fields.put("publisher", "Publisher");
         Reference ref = Reference.createReference(ReferenceType.BOOK, "", fields);
-
+        System.out.println(ref.getName());
         assertEquals("author90", ref.getName());
     }
 
