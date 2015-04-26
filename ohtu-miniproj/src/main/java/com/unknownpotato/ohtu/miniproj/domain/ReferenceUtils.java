@@ -5,13 +5,11 @@
  */
 package com.unknownpotato.ohtu.miniproj.domain;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
- *
+ * Static class for various Reference-class utilities
  * @author atte
  */
 public final class ReferenceUtils {
@@ -85,7 +83,7 @@ public final class ReferenceUtils {
                         .append(" "));
         sb.append("]");
         if (!r.getTags().isEmpty()) {
-            sb.append("\ntags: ");
+            sb.append("\n -tags: ");
             r.getTags().stream().forEach(t -> {
                 sb.append(t).append(" ");
             });

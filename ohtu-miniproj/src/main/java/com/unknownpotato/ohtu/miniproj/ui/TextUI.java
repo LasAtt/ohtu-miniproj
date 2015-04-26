@@ -65,9 +65,9 @@ public class TextUI {
     public void run() {
         Map<String, Runnable> choices = setUpChoices();
         io.println("Welcome to BibTeX-reference formatter!");
+        io.println("Input help to see commands.");
         while (true) {
-            io.println("Input help to see commands");
-            String choice = io.readCharacter(":");
+            String choice = io.readCharacter("(main):");
             choice = choice.toLowerCase();
 
             if (choice.equals("q")) {
@@ -113,7 +113,7 @@ public class TextUI {
                 + "e[X]port to BibTeX,\n"
                 + "[S]ave references JSON file,\n"
                 + "[O]pen references JSON file,\n"
-                + "[Q]uit\n");
+                + "[Q]uit");
     }
 
     /**
@@ -131,19 +131,23 @@ public class TextUI {
      *
      * @return choices as string.
      */
-    private void listAvailibleReferenceTypes() {
-        io.println("Give reference type:");
+    private void listAvailableReferenceTypes() {
+        StringBuilder sb = new StringBuilder();
+        
         for (int i = 0; i < ReferenceType.values().length; i++) {
-            io.print(i + "=" + ReferenceType.values()[i].toString() + " ");
-            if ((i + 1) % 4 == 0){
-                io.print("\n");
+            if (i != 0 && (i) % 4 == 0){
+                sb.append('\n');
             }
+            sb.append(i).append("=").append(ReferenceType.values()[i]).append('\t');
+            if (ReferenceType.values()[i].toString().length() < 6)
+                sb.append('\t');
         }
-        io.println("\n");
+        io.println(sb.toString());
     }
 
     private ReferenceType chooseReferenceType() {
-        listAvailibleReferenceTypes();
+        io.println("Input type of reference to add:");
+        listAvailableReferenceTypes();
         while (true) {
             int i = io.readInt(":");
             if (i < 0 || i >= ReferenceType.values().length) {
@@ -324,6 +328,7 @@ public class TextUI {
     private void addTags(Reference ref) {
         io.println("Input tags separated by spaces, leave empty to add no tags");
         ref.addTag(readTags());
+        io.println("Tags added.");
     }
 
     /**
@@ -334,6 +339,7 @@ public class TextUI {
     private void removeTags(Reference ref) {
         io.println("Input tags separated by spaces, leave empty to remove no tags");
         ref.removeTag(readTags());
+        io.println("Tags removed");
     }
 
     /**
@@ -421,11 +427,11 @@ public class TextUI {
             if (references.getFilters().isEmpty()) {
                 io.println("No filters applied");
             } else {
-                io.println("Currelty applied filters:");
+                io.println("Currently applied filters:");
                 listFilters();
             }
             io.println("[a]dd filter, [c]lear filters, [q]uit");
-            String choice = io.readCharacter(": ");
+            String choice = io.readCharacter(":");
             switch (choice.toLowerCase()) {
                 case "a":
                     addFilter();
@@ -448,13 +454,13 @@ public class TextUI {
         });
     }
 
-    public Method[] getAvailibleFilters() {
+    public Method[] getAvailableFilters() {
         Class fc = ReferenceFilters.class;
         return fc.getDeclaredMethods();
     }
 
-    public void listAvailibleFilters() {
-        Method[] filters = getAvailibleFilters();
+    public void listAvailableFilters() {
+        Method[] filters = getAvailableFilters();
         for (int i = 0; i < filters.length; i++) {
             io.println(i + "=" + filters[i].getName());
         }
@@ -462,14 +468,14 @@ public class TextUI {
 
     private Method chooseFilter() {
         io.println("Choose filter:");
-        listAvailibleFilters();
+        listAvailableFilters();
         while (true) {
             int i = io.readInt(":");
-            if (i < 0 || i >= getAvailibleFilters().length) {
+            if (i < 0 || i >= getAvailableFilters().length) {
                 io.println("Invalid choice");
                 continue;
             }
-            return getAvailibleFilters()[i];
+            return getAvailableFilters()[i];
         }
     }
 
