@@ -7,3 +7,4 @@
 - Sprint 1:n työmäärä taskeittain & burndown-käyrä: https://docs.google.com/spreadsheets/d/17brV5xYjEo4RQJ6ytr3Nv0LXqPGbHhKWkPIDuncOROk/edit#gid=0
 - Sprint 2:n työmäärä taskeittain & burndown-käyrä: https://docs.google.com/spreadsheets/d/17brV5xYjEo4RQJ6ytr3Nv0LXqPGbHhKWkPIDuncOROk/edit#gid=1438780296
 - Sprint 3:n työmäärä taskeittain & burndown-käyrä: https://docs.google.com/spreadsheets/d/17brV5xYjEo4RQJ6ytr3Nv0LXqPGbHhKWkPIDuncOROk/edit#gid=1178998915
+- Loppuraportti: https://docs.google.com/document/d/1JBeSSbxuxcJ8htmxhPG9MQlbWK-bxBpz0WraHnOrjTw/edit
