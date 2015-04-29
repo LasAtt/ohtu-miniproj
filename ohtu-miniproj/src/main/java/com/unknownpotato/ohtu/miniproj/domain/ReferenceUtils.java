@@ -54,9 +54,14 @@ public final class ReferenceUtils {
             generatedName += (char) (r.nextInt(26) + 'a');
         }
 
-        return generatedName;
+        return removeOddCharactersFromString(generatedName);
     }
 
+    /**
+     * generates a name for a reference from its author and publishing year.
+     * @param fields
+     * @return 
+     */
     private static String generateNameFromAuthorAndYear(Map<String, String> fields) {
         String generatedName = fields.get("author");
 
@@ -64,7 +69,32 @@ public final class ReferenceUtils {
         generatedName = generatedName.toLowerCase();
         generatedName += fields.get("year").substring(Math.min(2, fields.get("year").length()));
 
-        return generatedName;
+        return removeOddCharactersFromString(generatedName);
+    }
+
+    private static String removeOddCharactersFromString(String input) {
+        //replace all lower Umlauts
+     String result = input
+             .replaceAll("ü", "ue")
+             .replaceAll("ö", "o")
+             .replaceAll("ä", "ae")
+             .replaceAll("ß", "ss")
+             .replaceAll("å", "a");
+ 
+     //first replace all capital umlaute in a non-capitalized context (e.g. Übung)
+     result = result
+             .replaceAll("Ü(?=[a-zäöüß ])", "Ue")
+             .replaceAll("Ö(?=[a-zäöüß ])", "O")
+             .replaceAll("Ä(?=[a-zäöüß ])", "Ae");
+ 
+     //now replace all the other capital umlaute
+     result = result
+             .replaceAll("Ü", "UE")
+             .replaceAll("Ö", "O")
+             .replaceAll("Ä", "AE")
+             .replaceAll("Å", "A");
+ 
+     return result;
     }
 
     /**

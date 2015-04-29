@@ -77,6 +77,18 @@ public class ReferencesTest {
     }
     
     @Test
+    public void fieldFilterTest() {
+        refs.addReference(ref);
+        refs.addReference(articleRef);
+        
+        refs.addFilter(ReferenceFilters.fieldContains("title","BINARY"));
+        
+        assertEquals(1, refs.getReferences().size());
+        assertTrue(refs.getReferences().contains(articleRef));
+        assertTrue(!refs.getReferences().contains(ref));
+    }
+    
+    @Test
     public void multipleFiltersTest() {
         refs.addReference(ref);
         refs.addReference(articleRef);

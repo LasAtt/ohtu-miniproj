@@ -11,7 +11,8 @@ import java.util.function.Predicate;
  *
  * @author axwikstr
  */
-public class ReferenceFilters{
+public class ReferenceFilters {
+
     public static Predicate<Reference> isOfType(ReferenceType type) {
         return new Predicate<Reference>() {
 
@@ -26,7 +27,7 @@ public class ReferenceFilters{
             }
         };
     }
-    
+
     public static Predicate<Reference> hasTag(String tag) {
         return new Predicate<Reference>() {
 
@@ -41,6 +42,23 @@ public class ReferenceFilters{
             }
         };
     }
-    
-}
 
+    public static Predicate<Reference> fieldContains(String field, String value) {
+        return new Predicate<Reference>() {
+
+            @Override
+            public boolean test(Reference r) {
+                if(r.getFieldKeys().contains(field)) {
+                    return r.getField(field).contains(value);
+                }
+                return false;
+            }
+
+            @Override
+            public String toString() {
+                return field + " contains " + value;
+            }
+        };
+    }
+
+}

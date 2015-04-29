@@ -235,7 +235,7 @@ public class TextUI {
         io.println("Fill required fields");
         askForFields(Arrays.asList(ref.getType().getRequiredFields()), fields, false);
 
-        if (getPermission("Fill optional fields? ([Y]es/[N]o):")) {
+        if (askForPermission("Fill optional fields? ([Y]es/[N]o):")) {
             io.println("Fill optional fields, press enter to leave field empty.");
             askForFields(Arrays.asList(ref.getType().getOptionalFields()), fields, true);
         }
@@ -288,7 +288,7 @@ public class TextUI {
         io.println("Fill required fields");
         askForFields(Arrays.asList(type.getRequiredFields()), fields, false);
 
-        if (getPermission("Fill optional fields? ([Y]es/[N]o):")) {
+        if (askForPermission("Fill optional fields? ([Y]es/[N]o):")) {
             io.println("Fill optional fields, press enter to leave field empty.");
             askForFields(Arrays.asList(type.getOptionalFields()), fields, true);
         }
@@ -359,7 +359,7 @@ public class TextUI {
      * @param prompt question to ask the user
      * @return true if answer equals "y", false otherwise
      */
-    private boolean getPermission(String prompt) {
+    private boolean askForPermission(String prompt) {
         String choice = io.readCharacter(prompt);
         return choice.toLowerCase().trim().equals("y");
     }
@@ -368,19 +368,25 @@ public class TextUI {
      * Imports references from the specified JSON file into the program.
      */
     private void loadReferences() {
+        if (!references.getReferences().isEmpty()) {
+            if (!askForPermission("Currently loaded references will be lost! Continue? [y/n]")) {
+                return;
+            }
+        }
         String filename = io.readLine("filename [" + DEFAULT_FILENAME + "]:");
         if (filename.isEmpty()) {
             filename = DEFAULT_FILENAME;
-            try {
-                references = JSONReader.loadReferences(filename);
-            } catch (FileNotFoundException ex) {
-                io.println("File not found!");
-            } catch (JSONException ex) {
-                Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if (references.getReferences().isEmpty()) {
-                io.println("No references loaded!");
-            }
+        }
+        try {
+            references = JSONReader.loadReferences(filename);
+        } catch (FileNotFoundException ex) {
+            io.println("File not found!");
+            return;
+        } catch (JSONException ex) {
+            Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (references.getReferences().isEmpty()) {
+            io.println("No references loaded!");
         } else {
             io.println("References loaded successfully!");
         }
@@ -390,6 +396,11 @@ public class TextUI {
      * Exports references from the program into the specified JSON file.
      */
     private void saveReferences() {
+        if (!references.getFilters().isEmpty()) {
+            if (!askForPermission("Save only filtered references? [y/n]")) {
+                references.clearFilters();
+            }
+        }
         if (references.getReferences().isEmpty()) {
             io.println("No references found!");
             return;
@@ -419,7 +430,7 @@ public class TextUI {
         if (!canLeaveEmpty && input.isEmpty()) {
             return false;
         }
-        return FieldValidator.validate(field, input);
+        return FieldValidator.validate(field, canLeaveEmpty, input);
     }
 
     private void manageFilters() {
@@ -479,7 +490,7 @@ public class TextUI {
         }
     }
 
-    private Object[] readFilterParameters(Method filter) {
+    private Object[] askForFilterParameters(Method filter) {
         Parameter[] params = filter.getParameters();
         ArrayList<Object> rp = new ArrayList<>();
         for (Parameter param : params) {
@@ -495,7 +506,7 @@ public class TextUI {
     private void addFilter() {
         Method filter = chooseFilter();
         try {
-            references.addFilter((Predicate<Reference>) filter.invoke(null, readFilterParameters(filter)));
+            references.addFilter((Predicate<Reference>) filter.invoke(null, askForFilterParameters(filter)));
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(TextUI.class.getName()).log(Level.SEVERE, null, ex);
         }
