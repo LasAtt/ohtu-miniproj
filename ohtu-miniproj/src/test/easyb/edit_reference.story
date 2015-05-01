@@ -53,3 +53,19 @@ scenario "user can't edit a field that doesn't exist", {
        io.getPrints().shouldHave("The field month was not found!")
     }
 }
+
+scenario "user can add tags to a reference", {
+    given 'field edit attempt', {
+        references = new References()
+        io = new StubIO("a", "1", "author testitys", "title", "journal", "1995", "volume", "no", "e", "testitys95", "t", "test reference", "l", "q")
+        ui = new TextUI(references, io)
+    }
+
+    when 'valid reference name is given', {
+       ui.run()
+    }
+
+    then 'reference has been edited', {
+       io.getPrints().shouldHave("-tags: test reference")
+    }
+}
