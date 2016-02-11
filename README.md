@@ -1,3 +1,5 @@
+A small scale group software project utilizing agile development strategy done as part of Software Engineering course at University of Helsinki department of Computer Science.
+
 [![Stories in Ready](https://badge.waffle.io/serdion/ohtu-miniproj.png?label=ready&title=Ready)](https://waffle.io/serdion/ohtu-miniproj)
 # ohtu-miniproj
 
